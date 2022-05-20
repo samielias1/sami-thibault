@@ -1,95 +1,122 @@
-import {Map, View} from 'ol';
+import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
-import {transform} from 'ol/proj';
-import {Vector as VectorSource} from 'ol/source';
-import {Vector as VectorLayer} from 'ol/layer';
+import { transform } from 'ol/proj';
+import { Vector as VectorSource } from 'ol/source';
+import { Vector as VectorLayer } from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 // import Wochenmarkt from '../data/wochenmaerkte.geojson';
 import Overlay from 'ol/Overlay';
 import $ from 'jquery';
 import Select from 'ol/interaction/Select';
-import {Fill, Stroke, Style} from 'ol/style';
-// import Style from 'ol/style/Style';
+import { Fill, Circle, Stroke, Style } from 'ol/style';
+import XYZ from 'ol/source/XYZ';
+import {toLonLat} from 'ol/proj';
+import {toStringHDMS} from 'ol/coordinate';
 
 
-// const defaultStyle = new Style({
-//     fill: new Fill({
-//       color: '#8A2BE2',
-//     }),
-//     stroke: new Stroke({
-//         color: '#8A2BE2',
-//         width: 2,
-//       }),
-//   });
+
+const defaultStyle = new Style({
+    image: new Circle({
+        fill: new Fill({
+            color: '#e3ec17'
+        }),
+        stroke: new Stroke({
+            color: '#ec174a',
+            width: 1
+        }),
+        radius: 7
+    })
+});
+
+const selectStyle = new Style({
+    image: new Circle({
+        fill: new Fill({
+            color: '#F0F8FF'
+        }),
+        stroke: new Stroke({
+            color: '#ec174a',
+            width: 1
+        }),
+        radius: 7
+    })
+});
 
 const vectorSource = new VectorSource({
-    url: '../data/wochenmaerkte.geojson',
-    format: new GeoJSON()
-});
+        url: '../data/wochenmaerkte.geojson',
+        format: new GeoJSON()
+    });
 
 const vectorLayer = new VectorLayer({
-  source: vectorSource,
-//   style: defaultStyle
-});
-
-
-// const popup = new Overlay({
-//     element: $('#popup')       // das Div "popup" wird selektiert und als overlay positioniert
-// });
-
-export class OlMap {
-  constructor() {
-    this.map = new Map({
-      target: 'map',
-      view: new View({
-        center: transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'),
-        zoom: 11
-      }),
-      layers: [
-        new TileLayer({
-          source: new OSM()
-        }),
-        vectorLayer
-      ],
-      overlays: [popup]
+        source: vectorSource,
+        style: defaultStyle
     });
-    this.vectorLayer.on('click', function() {
-    
-            alert('Hallo');
-            
+
+
+const popup = new Overlay({
+        element: document.getElementById('popup')       // das Div "popup" wird selektiert und als overlay positioniert
+    });
+
+    export class OlMap {
+    constructor() {
+        this.map = new Map({
+            target: 'map',
+            view: new View({
+                center: transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'),
+                zoom: 11
+            }),
+            layers: [
+                new TileLayer({
+                    source: new OSM()
+                }),
+                vectorLayer
+            ],
+              overlays: [popup]
+        });
+        // this.map.on('click', function() {
+
+        //         alert('Hallo');
+        //         });
+
+
+        const selectSingleClick = new Select({
+            // condition: singleClick,
+            layers: [vectorLayer],
+            style: selectStyle
+                });
+        
+        this.map.addInteraction(selectSingleClick);
+
+        const displayFeatureInfo = function(pixel, coordinate) {
+            var features = [];
+            this.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+                features.push(feature);
             });
-  }
-  // evtl muss Mausklick hier rein, also Methode der Klasse map
+
+            if (features.length > 0) {
+                var info = [];
+                for (var i = 0; i < features.length; i++) {
+                    info.push(features[i].properties.get('title'));
+                }
+                document.getElementById('popup').innerHTML = info.join(', ') || '(unknown)';
+                popup.setPosition(coordinate);
+            } else {
+                document.getElementById('popup').innerHTML = '';
+                popup.setPosition(undefined);
+            }
+        };
+
+        this.map.on('singleclick', function(evt) {
+            const pixel = evt.pixel;
+            const coordinate = evt.coordinate;
+            displayFeatureInfo(pixel, coordinate);
+        });
+
+
+
+
+
+    }
 };
 
-// const selectSingleClick = new Select({
-//     layers:[vectorLayer],
-//     style: [selected]
-// });
 
-// von Isabelle (Ihr könnt dabei auch auf Variablen zugreifen, die imselben Skript, aber außerhalb der Klasse definiert wurden)
-// export class OlMap {
-//     constructor() {
-//     this.map = new Map({
-//     target: 'map',
-//     view: new View({
-//     center: transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'),
-//     zoom: 11
-//     }),
-//     layers: [
-//     new TileLayer({
-//     source: new OSM()
-//     }),
-//     //vectorLayer
-//     ],
-//     //overlays: [popup]
-//     });
-    
-//     this.map.on('click', function() {
-    
-//     alert('Hallo');
-    
-//     });
-//     }
-//     };
