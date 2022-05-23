@@ -120,6 +120,10 @@ module.exports = {
         {
           from: './src/php',
           to: '../php'
+        },
+        {
+          from: './src/data',
+          to: '../data'
         }
       ]
     })
