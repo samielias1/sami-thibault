@@ -17,7 +17,10 @@
         <a>MathQuiz</a>
     </div>
 <div id="map">
-<div id="popup"></div>
+<div id="popup">
+  <a href="#" id="popup-closer"></a>
+  <div id="popup-content"></div>  
+</div>
 </div>
 <div id="menu"></div>
 

@@ -1,47 +1,57 @@
 <?php
 
-echo "<table style='border: solid 1px black;'>";
+// include_once(YOUR_PHPMYADMIN_CONFIG);
 
-class TableRows extends RecursiveIteratorIterator {
-  function __construct($it) {
-    parent::__construct($it, self::LEAVES_ONLY);
-  }
-
-  function current() {
-    return "<td style='width:150px;border:1px solid black;'>" . parent::current(). "</td>";
-  }
-
-  function beginChildren() {
-    echo "<tr>";
-  }
-
-  function endChildren() {
-    echo "</tr>" . "\n";
-  }
-}
-
-
-$servername = "mysql-localhost";
+$dsn = 'mysql:host=mysql-localhost;dbname=testdb';
 $username = "root";
 $password = "root";
 
-try {
-  $conn = new PDO("mysql:host=$servername;dbname=testdb", $username, $password);
-  // set the PDO error mode to exception
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  echo "Connected successfully";
-
-  $stmt = $conn->prepare("SELECT x,y,title FROM wochenmaerkte2");
-  $stmt->execute();
-
-  // set the resulting array to associative
-  $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-  foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
-    echo $v;
-  }
-
-
-} catch(PDOException $e) {
-  echo "Connection failed: " . $e->getMessage();
+//$user & $password should come from config file
+$conn = new PDO($dsn,$username,$password);
+if (!$conn) {
+	echo 'no connection\n';
+	exit;
 }
+$sql = 'SELECT * FROM dummyData';
+
+$rs = $conn->query($sql);
+if (!$rs) {
+    echo 'An SQL error occured.\n';
+    exit;
+}
+
+$geojson = array (
+	'type'	=> 'FeatureCollection',
+	'features'	=> array()
+);
+
+while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+	$properties = $row;
+	unset($properties['lat']);
+	unset($properties['lon']);
+	$feature = array(
+		'type'	=> 'Feature',
+		'geometry' => array(
+			'type' => 'Point',
+			'coordinates' => array(
+					$row['lat'],
+					$row['lon']
+					)
+			),
+		'properties' => $properties
+	);
+	array_push($geojson['features'], $feature);
+}
+
+header('Content-type: application/json');
+echo json_encode($geojson, JSON_PRETTY_PRINT);
+
+//for local json files use code below
+
+/*$fp = fopen('data.json', 'w');
+fwrite($fp, geoJson($json));
+fclose($fp);*/
+
+$conn = NULL;
+
 ?> 

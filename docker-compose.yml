@@ -8,6 +8,7 @@ services:
       - "3306:3306"
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/secure-data:/var/lib/mysql-files
     environment:
       - MYSQL_DATABASE=testdb
       - MYSQL_ROOT_PASSWORD=root

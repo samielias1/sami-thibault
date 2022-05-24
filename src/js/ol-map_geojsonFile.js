@@ -10,9 +10,9 @@ import Overlay from 'ol/Overlay';
 import $ from 'jquery';
 import Select from 'ol/interaction/Select';
 import { Fill, Circle, Stroke, Style } from 'ol/style';
-import XYZ from 'ol/source/XYZ';
-import {toLonLat} from 'ol/proj';
-import {toStringHDMS} from 'ol/coordinate';
+// import XYZ from 'ol/source/XYZ';
+// import {toLonLat} from 'ol/proj';
+// import {toStringHDMS} from 'ol/coordinate';
 
 
 
@@ -99,10 +99,10 @@ const popup = new Overlay({
                     // info.push(features[i].properties.get('title')); (funktioniert nicht)
                     info.push((features[i].values_.title));
                 }
-                document.getElementById('popup').innerHTML = info.join(', ') || '(unknown)';
+                document.getElementById('popup-content').innerHTML = info.join(', ') || '(unknown)';
                 popup.setPosition(coordinate);
             } else {
-                document.getElementById('popup').innerHTML = '';
+                document.getElementById('popup-content').innerHTML = '';
                 popup.setPosition(undefined);
             }
         };
@@ -113,6 +113,13 @@ const popup = new Overlay({
             displayFeatureInfo(pixel, coordinate);
         });
 
+        document.getElementById('popup-closer').onclick = function() {
+            popup.setPosition(undefined);
+            document.getElementById('popup-closer').blur();
+            selectSingleClick.getFeatures().clear();
+            return false;
+        };
+
 
 
 
@@ -120,6 +127,20 @@ const popup = new Overlay({
     }
 };
 
+// $.ajax({
+//     type: 'POST',
+//     dataType: 'json',
+//     url: '../php/pdo.php',
+//     success: function(data) {
+//         var geojson = jQuery.parseJSON(data);
+//         var format = new ol.format.GeoJSON();
+//         var features = format.readFeatures(geojson, {
+//             dataProjection: 'EPSG:4326',
+//             featureProjection: 'EPSG:3857'
+//         });
+//         vectorSource.addFeatures(features);
+//     }
+// })
 
 // import { Map, View } from 'ol';
 // import TileLayer from 'ol/layer/Tile';
