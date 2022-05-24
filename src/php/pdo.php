@@ -12,7 +12,7 @@ if (!$conn) {
 	echo 'no connection\n';
 	exit;
 }
-$sql = 'SELECT * FROM dummyData';
+$sql = 'SELECT * FROM dummyData3';
 
 $rs = $conn->query($sql);
 if (!$rs) {

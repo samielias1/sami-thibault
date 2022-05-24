@@ -120,7 +120,20 @@ const popup = new Overlay({
             return false;
         };
 
-
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '../php/pdo.php',
+            success: (data) => {
+                var geojson = JSON.parse(data);
+                var format = new GeoJSON();
+                var features = format.readFeatures(geojson, {
+                    dataProjection: 'EPSG:4326',
+                    featureProjection: 'EPSG:3857'
+                });
+                vectorSource.addFeatures(features);
+            }
+        })
 
 
 
@@ -141,6 +154,10 @@ const popup = new Overlay({
 //         vectorSource.addFeatures(features);
 //     }
 // })
+
+
+
+
 
 // import { Map, View } from 'ol';
 // import TileLayer from 'ol/layer/Tile';

@@ -1,17 +1,17 @@
-CREATE TABLE IF NOT Exists dummyData (
-	srid integer NOT NULL,
+CREATE TABLE IF NOT Exists dummyData3 (
+	id integer NOT NULL PRIMARY KEY,
 	deliktform VARCHAR(255) NOT NULL,
-	datum DATE NOT NULL,
-	uhrzeit time,
+	datum VARCHAR(255) NOT NULL,
+	uhrzeit VARCHAR(255) NOT NULL,
 	lat VARCHAR(255) NOT NULL,
 	lon VARCHAR(255) NOT NULL,
 	tatort VARCHAR(255) NOT NULL,
 	selbstbezeichnung VARCHAR(255) NOT NULL);
     
-LOAD DATA INFILE 'D:\Projekt\sami-thibault\src\data\DummyDaten_Master_v01_se_test.csv'
-INTO TABLE dummyData
+LOAD DATA INFILE '/var/lib/mysql-files/DummyDaten_Master_v01_se_test.csv'
+INTO TABLE dummyData3
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
-LINES TERMINATED BY '\n';dummyData
+LINES TERMINATED BY '\n';
 
 -- drop table wochenmaerkte;
 
@@ -29,22 +29,27 @@ CREATE TABLE IF NOT Exists wochenmaerkte (
 LOAD DATA INFILE '/var/lib/mysql-files/wochenmaerkte.csv'
 INTO TABLE wochenmaerkte
 CHARACTER SET utf8
-FIELDS TERMINATED BY ','
+FIELDS TERMINATED BY ',';
 -- ENCLOSED BY '"'
 -- LINES TERMINATED BY '\n';
 
+drop table dummyData2;
 
-CREATE TABLE IF NOT Exists dummyData6 (
-	id integer NOT NULL,
-	deliktform VARCHAR(500) NOT NULL,
-	datum DATE NOT NULL,
-	uhrzeit time,
-	lat VARCHAR(500) NOT NULL,
-	lon VARCHAR(500) NOT NULL,
-	tatort VARCHAR(500) NOT NULL,
-	selbstbezeichnung VARCHAR(500) NOT NULL);
+CREATE TABLE IF NOT Exists dummyData2 (
+	id integer NOT NULL PRIMARY KEY,
+	deliktform VARCHAR(150) NOT NULL,
+	datum VARCHAR(150) NOT NULL,
+	uhrzeit VARCHAR(150) NOT NULL,
+	lat VARCHAR(150) NOT NULL,
+	lon VARCHAR(150) NOT NULL,
+	tatort VARCHAR(150) NOT NULL)
+    ;
     
-LOAD DATA INFILE '/var/lib/mysql-files/DummyDaten_Master_v01_se_test.csv'
-INTO TABLE dummyData6
+LOAD DATA INFILE '/var/lib/mysql-files/DummyDaten_Master_v02.csv'
+INTO TABLE dummyData2
 CHARACTER SET utf8
-FIELDS TERMINATED BY ','
+FIELDS TERMINATED BY ';' -- ENCLOSED BY '"'
+IGNORE 1 LINES
+;
+
+
