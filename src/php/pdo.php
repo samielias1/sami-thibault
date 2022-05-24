@@ -34,8 +34,8 @@ while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		'geometry' => array(
 			'type' => 'Point',
 			'coordinates' => array(
-					$row['lat'],
-					$row['lon']
+					floatval($row['lon']), // wir wollen die Koordinaten als float ohne ""
+					floatval($row['lat']) // erstmal lon, dann lat
 					)
 			),
 		'properties' => $properties
