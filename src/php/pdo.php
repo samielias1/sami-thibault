@@ -34,8 +34,10 @@ while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		'geometry' => array(
 			'type' => 'Point',
 			'coordinates' => array(
-					$row['lat'],
-					$row['lon']
+					$row['lon'],            // hier auf Reihenfolge lon/lat achten - https://geojsonlint.com/ zum testen der erzeugten Geojson
+					$row['lat']
+                    // floatval($row['lon']), // wir wollen die Koordinaten als float ohne ""
+					// floatval($row['lat']) // erstmal lon, dann lat
 					)
 			),
 		'properties' => $properties

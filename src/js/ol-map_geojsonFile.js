@@ -5,14 +5,12 @@ import { transform } from 'ol/proj';
 import { Vector as VectorSource } from 'ol/source';
 import { Vector as VectorLayer } from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
-// import Wochenmarkt from '../data/wochenmaerkte.geojson';
 import Overlay from 'ol/Overlay';
 import $ from 'jquery';
 import Select from 'ol/interaction/Select';
 import { Fill, Circle, Stroke, Style } from 'ol/style';
-// import XYZ from 'ol/source/XYZ';
-// import {toLonLat} from 'ol/proj';
-// import {toStringHDMS} from 'ol/coordinate';
+import {Cluster} from 'ol/source';
+
 
 
 
@@ -43,11 +41,12 @@ const selectStyle = new Style({
 });
 
 const vectorSource = new VectorSource({
-        url: '../data/wochenmaerkte.geojson',
+        // url: '../data/wochenmaerkte.geojson',        // wir bauen einen leeren Vektorlayer, der unten mit Ajax befüllt wird
         format: new GeoJSON()
     });
 
 const vectorLayer = new VectorLayer({
+        maxResolution:20,
         source: vectorSource,
         style: defaultStyle
     });
@@ -56,6 +55,37 @@ const vectorLayer = new VectorLayer({
 const popup = new Overlay({
         element: document.getElementById('popup')       // das Div "popup" wird selektiert und als overlay positioniert
     });
+
+const clusterSource = new Cluster({
+    //    distance: parseInt(distanceInput.value, 10),
+    //    minDistance: parseInt(minDistanceInput.value, 10),
+       source: vectorSource,
+      });
+
+      const styleCache = {};
+const clusters = new VectorLayer({
+    minResolution:20,
+  source: clusterSource,
+  style: function (feature) {
+    const size = feature.get('features').length;
+    let style = styleCache[size];
+    if (!style) {
+      style = new Style({
+        image: new Circle({
+          radius: 10,
+          stroke: new Stroke({
+            color: '#fff',
+          }),
+          fill: new Fill({
+            color: '#3399CC',
+          }),
+        }),
+      });
+      styleCache[size] = style;
+    }
+    return style;
+  },
+});
 
     export class OlMap {
     constructor() {
@@ -69,7 +99,8 @@ const popup = new Overlay({
                 new TileLayer({
                     source: new OSM()
                 }),
-                vectorLayer
+                vectorLayer,
+                clusters
             ],
             overlays: [popup]
         });
@@ -95,11 +126,22 @@ const popup = new Overlay({
 
             if (features.length > 0) {
                 var info = [];
+                var infoTitle = ['deliktform','datum','uhrzeit','tatort','selbstbezeichnung'];
                 for (var i = 0; i < features.length; i++) {
-                    // info.push(features[i].properties.get('title')); (funktioniert nicht)
-                    info.push((features[i].values_.title));
+                    // info.push(features[i].get('deliktform','datum','uhrzeit')); //(funktioniert nicht)
+                    // info.push((features[i].values_.title));     // funktioniert, auf wochenmaerkte angewendet
+                    // infoTitle.forEach(element => {
+                    //     info.push(element + features[i].values_.element);  
+                    // });
+                    info.push('Deliktform: '+features[i].values_.deliktform);
+                    info.push('Datum: '+features[i].values_.datum);
+                    info.push('Uhrzeit: '+features[i].values_.uhrzeit);
+                    info.push('Tatort: '+features[i].values_.tatort);
+                    info.push('Selbstbezeichnung: '+features[i].values_.selbstbezeichnung);
+                    
                 }
-                document.getElementById('popup-content').innerHTML = info.join(', ') || '(unknown)';
+                // document.getElementById('popup-content').innerHTML = info.join('\r\n') || '(unknown)';
+                document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
                 popup.setPosition(coordinate);
             } else {
                 document.getElementById('popup-content').innerHTML = '';
@@ -125,7 +167,7 @@ const popup = new Overlay({
             dataType: 'json',
             url: '../php/pdo.php',
             success: (data) => {
-                var geojson = JSON.parse(data);
+                var geojson = data;
                 var format = new GeoJSON();
                 var features = format.readFeatures(geojson, {
                     dataProjection: 'EPSG:4326',
@@ -135,6 +177,28 @@ const popup = new Overlay({
             }
         })
 
+        // erste funktionierende Lösung Sami
+        // $.getJSON("../php/pdo.php",
+
+        // (data) => {
+        // vectorSource.addFeatures(new GeoJSON().readFeatures(data));
+        
+        // });
+
+        //Loesung Tibo
+        // $.getJSON('../php/pdo.php',function(data){
+        //     // console.log('before');
+        //     var geojson = data;; /*jQuery.JSONparse(data);*/
+        //     // console.log('ajax2'+geojson.type + ' typ:'+ geojson.features[1].type); //obj.employees[1].firstName
+        //     // console.log('coordinates'+ geojson.features[1].geometry.coordinates);
+        //     var format = new GeoJSON();
+        //     var features = format.readFeatures(geojson, {
+        //     dataProjection: 'EPSG:4326',
+        //     featureProjection: 'EPSG:3857'
+        //     });
+        //     vectorSource.addFeatures(features);
+        //     }
+        //     );
 
 
     }

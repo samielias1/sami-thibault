@@ -38,7 +38,7 @@
   border: 1px solid #cccccc;
   bottom: 12px;
   left: -50px;
-  width: auto
+  width:max-content
 
 }
 
@@ -56,6 +56,7 @@
 // }
 #popup-content {
   margin-right: 10px;
+ 
 }
 #popup:after, #popup:before {
   top: 100%;

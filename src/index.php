@@ -19,7 +19,11 @@
 <div id="map">
 <div id="popup">
   <a href="#" id="popup-closer"></a>
-  <div id="popup-content"></div>  
+  <div id="popup-content">
+    <ul>
+      <li></li>
+    </ul>  
+  </div>  
 </div>
 </div>
 <div id="menu"></div>
