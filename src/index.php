@@ -26,7 +26,30 @@
   </div>  
 </div>
 </div>
-<div id="menu"></div>
+<div id="menu">
+<div id="divBezirk">
+
+  <p>Bezirk</p>
+  <input type="radio" id="charlottenburg" name="txtbezirk" value="charlottenburg">
+  <label for="charlottenburg">Charlottenburg-Wilmersdorf</label><br>
+  <input type="radio" id="mitte" name="txtbezirk" value="mitte">
+  <label for="mitte">Mitte</label><br>
+  <input type="radio" id="neukölln" name="txtbezirk" value="neukölln">
+  <label for="neukölln">Neukölln</label>
+
+  <input type="submit" value="Bezirke auswählen" id=bttnBezirke>
+ 
+  <p>Uhrzeit</p>
+  <input type="radio" id="nacht" name="txUhr" value="nacht">
+  <label for="nacht">Nachts : 22h - 7h</label><br>
+  <input type="radio" id="tagsueber" name="txtuhr" value="tagsueber">
+  <label for="tagsueber">Tagsüber : 7h - 22h </label><br>
+    <input type="submit" value="Uhrzeit auswählen" id=bttnUhr>
+<br>
+    <input type="submit" value="Auswahl zurücksetzen" id=bttnAlle>
+  </div> 
+
+</div>
 
 <?php
 echo "<script src=" . $files["app.js"] . "></script>";

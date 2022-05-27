@@ -2,6 +2,8 @@
 
 // include_once(YOUR_PHPMYADMIN_CONFIG);
 
+// Parameter aus dem Filter Formular
+$param = $_POST["Bezirk"];
 
 $dsn = 'mysql:host=mysql-localhost;dbname=testdb';
 $username = "root";
@@ -13,7 +15,7 @@ if (!$conn) {
 	echo 'no connection\n';
 	exit;
 }
-$sql = 'SELECT * FROM dummyData5';
+$sql = "SELECT * FROM dummyData3 where lower(Bezirk) LIKE lower('%".$param."%')";
 
 $rs = $conn->query($sql);
 if (!$rs) {

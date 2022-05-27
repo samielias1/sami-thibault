@@ -1,3 +1,32 @@
+CREATE TABLE IF NOT Exists dummyData5 (
+	id integer NOT NULL PRIMARY KEY,
+	deliktform VARCHAR(255) NOT NULL,
+	datum VARCHAR(255) NOT NULL,
+	uhrzeit VARCHAR(255) NOT NULL,
+	lat VARCHAR(255) NOT NULL,
+	lon VARCHAR(255) NOT NULL,
+	tatort VARCHAR(255) NOT NULL,
+	selbstbezeichnung VARCHAR(255) NOT NULL,
+    bezirk VARCHAR(255) NOT NULL )    
+    ;
+
+LOAD DATA INFILE '/var/lib/mysql-files/DummyDaten_Master_v01_se_test.csv'
+INTO TABLE dummyData5
+CHARACTER SET utf8
+FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+
+
+
+
+
+
+
+
+
+
 CREATE TABLE IF NOT Exists dummyData3 (
 	id integer NOT NULL PRIMARY KEY,
 	deliktform VARCHAR(255) NOT NULL,
@@ -6,7 +35,14 @@ CREATE TABLE IF NOT Exists dummyData3 (
 	lat VARCHAR(255) NOT NULL,
 	lon VARCHAR(255) NOT NULL,
 	tatort VARCHAR(255) NOT NULL,
-	selbstbezeichnung VARCHAR(255) NOT NULL);
+	selbstbezeichnung VARCHAR(255) NOT NULL)
+    ;
+
+ALTER TABLE dummyData3
+ADD COLUMN bezirk VARCHAR(255) AFTER selbstbezeichnung;    
+
+ALTER TABLE dummyData2
+ADD COLUMN bezirk VARCHAR(255) AFTER selbstbezeichnung;   
     
 LOAD DATA INFILE '/var/lib/mysql-files/DummyDaten_Master_v01_se_test.csv'
 INTO TABLE dummyData3

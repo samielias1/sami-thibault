@@ -86,15 +86,16 @@ const clusters = new VectorLayer({
     return style;
   },
 });
+const view = new View({
+    center: transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 11   
+})
 
     export class OlMap {
     constructor() {
         this.map = new Map({
             target: 'map',
-            view: new View({
-                center: transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'),
-                zoom: 11
-            }),
+            view: view,
             layers: [
                 new TileLayer({
                     source: new OSM()
@@ -177,7 +178,66 @@ const clusters = new VectorLayer({
             }
         })
 
-        // erste funktionierende Lösung Sami
+        $("#bttnBezirke").on("click",  () => {
+            // Nutzereingaben holen
+            var bezirk = $("input[name='txtbezirk']:checked").val();
+                console.log('bezirk :'+bezirk);
+        
+            //Serveranfragen
+            $.post("../php/pdo_filter.php", {   //"../php/pdo_geojson_filter.php"
+                Bezirk: bezirk,
+                
+            },  (response) =>{   // x ist hier die Antwort des Servers - hier ist es html
+                //$("#divBezirk").html('baba');
+                var geojsonFilt = response;
+                vectorSource.clear();
+                var formatFilt = new GeoJSON();
+                var featuresFilt = formatFilt.readFeatures(geojsonFilt, {
+                    dataProjection: 'EPSG:4326',
+                    featureProjection: 'EPSG:3857'
+                });
+                vectorSource.addFeatures(featuresFilt);  
+                const feature = vectorSource.getFeatures()[0];
+                console.log(feature);
+                const point = feature.getGeometry();
+                console.log('point');
+                console.log(point.getCoordinates());
+                const size = this.map.getSize();
+                console.log('size');
+                console.log(size); // hier [800 800]
+                //view.centerOn(point.getCoordinates(), size, [400, 400]);  // last Parameter = position = pixel  on the view to center on.
+                //this.map.view.setCenter(centerNew);  
+                view.setZoom(13);
+                view.setCenter(point.getCoordinates());
+      
+            });
+        })
+        $("#bttnAlle").on("click",  () => {
+            //Serveranfragen
+          $.post("../php/pdo.php", {   
+             // Bezirk: bezirk,
+              
+          },  (response) =>{   // x ist hier die Antwort des Servers - hier ist es html
+              var geojsonAll = response;
+              vectorSource.clear();
+              var formatAll = new GeoJSON();
+              var featuresAll = formatAll.readFeatures(geojsonAll, {
+                  dataProjection: 'EPSG:4326',
+                  featureProjection: 'EPSG:3857'
+              });
+              vectorSource.addFeatures(featuresAll);
+              view.setZoom(11);
+              view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));
+             
+      
+          });
+      }) 
+
+
+    }
+};
+
+ // erste funktionierende Lösung Sami
         // $.getJSON("../php/pdo.php",
 
         // (data) => {
@@ -200,9 +260,6 @@ const clusters = new VectorLayer({
         //     }
         //     );
 
-
-    }
-};
 
 // $.ajax({
 //     type: 'POST',
