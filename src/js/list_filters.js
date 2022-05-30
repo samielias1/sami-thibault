@@ -1,26 +1,18 @@
 //Liste fuer die Bezirke
 export const arrBezirke = [
     "Berlin allg.",
-    "Charlottenburg",
-    "Friedrichshain",
-    "Hellersdorf",
-    "Hohenschönhausen",
-    "Köpenick",
-    "Kreuzberg",
+    "Charlottenburg-Wilmersdorf",
+    "Friedrichshain-Kreuzberg",
     "Lichtenberg",
-    "Marzahn",
+    "Marzahn-Hellersdorf",
     "Mitte",
     "Neukölln",
     "Pankow",
-    "Prenzlauer Berg",
     "Reinickendorf",
-    "Schöneberg",
-    "Tempelhof",
-    "Tiergarten",
-    "Treptow",
-    "Wedding",
-    "Weißensee",
-    "Zehlendorf"];
+    "Spandau",
+    "Steglitz-Zehlendorf",
+    "Tempelhof-Schöneberg",
+    "Treptow-Köpenick"];
 
     export const arrUhr = [
         "alle Uhrzeiten",
@@ -49,7 +41,7 @@ export const arrDeliktform = [
     "anderes",
 ];
 
-export const arrJahr = [ "alle", 2019, 2020 , 2021, 2022] ;
+export const arrJahr = [ "alle", 2020 , 2021, 2022] ;
    
 
 

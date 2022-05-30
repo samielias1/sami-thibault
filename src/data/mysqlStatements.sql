@@ -1,23 +1,27 @@
-CREATE TABLE IF NOT Exists dummyData5 (
-	id integer NOT NULL PRIMARY KEY,
-	deliktform VARCHAR(255) NOT NULL,
-	datum VARCHAR(255) NOT NULL,
-	uhrzeit VARCHAR(255) NOT NULL,
+CREATE TABLE IF NOT Exists dummyData6 (
+	id INTEGER NOT NULL  PRIMARY KEY,
+	deliktform INTEGER NOT NULL,
+	datum date NOT NULL,
+	uhrzeit time NOT NULL,
+    bezirk INTEGER NOT NULL,
 	lat VARCHAR(255) NOT NULL,
 	lon VARCHAR(255) NOT NULL,
-	tatort VARCHAR(255) NOT NULL,
-	selbstbezeichnung VARCHAR(255) NOT NULL,
-    bezirk VARCHAR(255) NOT NULL )    
+	tatort INTEGER NOT NULL,
+    polizei INTEGER NOT NULL,
+	selbstbezeichnung INTEGER NOT NULL)    
     ;
 
-LOAD DATA INFILE '/var/lib/mysql-files/DummyDaten_Master_v01_se_test.csv'
-INTO TABLE dummyData5
+LOAD DATA INFILE '/var/lib/mysql-files/DummyDaten_complete_v02_semikolon.csv'
+INTO TABLE dummyData6
 CHARACTER SET utf8
-FIELDS TERMINATED BY ',' ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+FIELDS TERMINATED BY ';' -- ENCLOSED BY '"'
+-- LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
+select hour(uhrzeit) from dummyData6 where bezirk = 4 ;
+select year(datum) from dummyData6 where bezirk = 4 ;
 
+drop table dummyData6;
 
 
 

@@ -40,7 +40,7 @@
       </div> 
 
     <div id="divJahr">
-  <p>Jahresgang</p>
+  <p>Jahr</p>
     <!-- wird in index.js gefüllt -->
       </div> 
 

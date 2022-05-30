@@ -1,7 +1,10 @@
 <?php
 
-// include_once(YOUR_PHPMYADMIN_CONFIG);
+// Parameter aus dem Filter Formular
+$param = $_POST["Bezirk"] + 0 ;
+//echo $param;
 
+// include_once(YOUR_PHPMYADMIN_CONFIG);
 
 $dsn = 'mysql:host=mysql-localhost;dbname=testdb';
 $username = "root";
@@ -13,7 +16,8 @@ if (!$conn) {
 	echo 'no connection\n';
 	exit;
 }
-$sql = 'SELECT * FROM dummyData6';
+$sql = "SELECT * FROM dummyData4 where bezirk =".$param;
+ //echo $sql;
 
 $rs = $conn->query($sql);
 if (!$rs) {
@@ -28,17 +32,15 @@ $geojson = array (
 
 while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 	$properties = $row;
-	unset($properties['lat']);
 	unset($properties['lon']);
+	unset($properties['lat']);
 	$feature = array(
 		'type'	=> 'Feature',
 		'geometry' => array(
 			'type' => 'Point',
 			'coordinates' => array(
-					$row['lon'],            // hier auf Reihenfolge lon/lat achten - https://geojsonlint.com/ zum testen der erzeugten Geojson
-					$row['lat']
-                    // floatval($row['lon']), // wir wollen die Koordinaten als float ohne ""
-					// floatval($row['lat']) // erstmal lon, dann lat
+				floatval($row['lon']),  // wir wollen die Koordinaten als float ohne ""
+				floatval($row['lat'])
 					)
 			),
 		'properties' => $properties
