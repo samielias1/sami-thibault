@@ -13,7 +13,7 @@ if (!$conn) {
 	echo 'no connection\n';
 	exit;
 }
-$sql = 'SELECT * FROM dummyData6';
+$sql = 'SELECT * FROM Daten_Berlin';
 
 $rs = $conn->query($sql);
 if (!$rs) {

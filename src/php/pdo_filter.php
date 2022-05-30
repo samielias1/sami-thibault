@@ -15,7 +15,7 @@ if (!$conn) {
 	echo 'no connection\n';
 	exit;
 }
-$sql = "SELECT * FROM dummyData6 where lower(Bezirk) LIKE lower('%".$param."%')";
+$sql = "SELECT * FROM Daten_Berlin where lower(Bezirk) LIKE lower('%".$param."%')";
 
 $rs = $conn->query($sql);
 if (!$rs) {

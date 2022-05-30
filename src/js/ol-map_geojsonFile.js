@@ -10,6 +10,7 @@ import $ from 'jquery';
 import Select from 'ol/interaction/Select';
 import { Fill, Circle, Stroke, Style } from 'ol/style';
 import {Cluster} from 'ol/source';
+import {deliktform, selbstbezeichnung, tatort} from './list_filters';
 
 
 
@@ -119,6 +120,7 @@ const view = new View({
         
         this.map.addInteraction(selectSingleClick);
         // this.map.addOverlay(popup);
+
         const displayFeatureInfo = (pixel, coordinate) => {
             var features = [];
             this.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
@@ -127,18 +129,18 @@ const view = new View({
 
             if (features.length > 0) {
                 var info = [];
-                var infoTitle = ['deliktform','datum','uhrzeit','tatort','selbstbezeichnung'];
+                // var infoTitle = ['deliktform','datum','uhrzeit','tatort','selbstbezeichnung'];
                 for (var i = 0; i < features.length; i++) {
                     // info.push(features[i].get('deliktform','datum','uhrzeit')); //(funktioniert nicht)
                     // info.push((features[i].values_.title));     // funktioniert, auf wochenmaerkte angewendet
                     // infoTitle.forEach(element => {
                     //     info.push(element + features[i].values_.element);  
                     // });
-                    info.push('Deliktform: '+features[i].values_.deliktform);
+                    info.push('Deliktform: '+features[i].values_.deliktform+'. '+ deliktform[features[i].values_.deliktform]);
                     info.push('Datum: '+features[i].values_.datum);
                     info.push('Uhrzeit: '+features[i].values_.uhrzeit);
-                    info.push('Tatort: '+features[i].values_.tatort);
-                    info.push('Selbstbezeichnung: '+features[i].values_.selbstbezeichnung);
+                    info.push('Tatort: '+features[i].values_.tatort +'. '+ tatort[features[i].values_.tatort]);
+                    info.push('Selbstbezeichnung: '+features[i].values_.selbstbezeichnung+'. '+ selbstbezeichnung[features[i].values_.selbstbezeichnung]);
                     
                 }
                 // document.getElementById('popup-content').innerHTML = info.join('\r\n') || '(unknown)';
