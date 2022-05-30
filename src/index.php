@@ -44,6 +44,12 @@
     <!-- wird in index.js gefüllt -->
       </div> 
 
+     <div id="divDelikt">
+  <p>Deliktformen</p>
+    <!-- wird in index.js gefüllt -->
+      </div> 
+
+    
     <input type="submit" value="Auswählen" id="bttnSelect">
 <br>
     <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">
