@@ -123,11 +123,40 @@ const view = new View({
         this.map.addInteraction(selectSingleClick);
         this.map.addOverlay(popup);
         
+        
+        const openPopup = (evt)=>{
+            var feature = map.forEachFeatureAtPixel(evt.pixel,
+            (feature, layer) => {
+                if (feature){
+                    var coord = this.map.getCoordinateFromPixel(evt.pixel);
+                    if (typeof feature.get('features') === 'undefined'){
+                        document.getElementById('popup-content').innerHTML = feature.get('deliktform');
+                    } else {
+                        var cfeatures = feature.get('features');
+                        if (cfeatures.length > 1) {
+                            document.getElementById('popup-content').innerHTML = 'Anzahl Clusterelemente';
+                            for (var i = 0; i < cfeatures.length; i++) {
+                                document.getElementById('popup-content').append(cfeatures[i].values_.datum);
+                            }
+                        }
+                        if (cfeatures.length == 1) {
+                            document.getElementById('popup-content').innerHTML = cfeatures[i].values_.tatort;
+                        }
+                     }
+                     popup.setPosition(coord);
+                } else {
+                    popup.setPosition(undefined);
+                }
+            });
+        };
+        this.map.on('click', openPopup);
+
+
         const displayFeatureInfo = (pixel, coordinate) => {
             let features = [];
             this.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
                 features.push(feature);
-            }); 
+            });
 
             if (features.length == 1) {
                 
@@ -149,14 +178,24 @@ const view = new View({
                 // document.getElementById('popup-content').innerHTML = info.join('\r\n') || '(unknown)';
                 document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
                 popup.setPosition(coordinate);
+
             } 
             // else if (features.length > 1) {
-            // hier die features vom clusters layer ansprechen?
-            // }
+            //     alert("Hallo")};
+            // const extent = boundingExtent(
+            //     features.map((r) => r.getGeometry().getCoordinates())
+            //   );
+            //   map.getView().fit(extent, {duration: 1000, padding: [50, 50, 50, 50]});
+            // 	}
             
             else {
                 document.getElementById('popup-content').innerHTML = '';
-                popup.setPosition(undefined);               
+                popup.setPosition(undefined);
+            //     const extent = boundingExtent(
+            //         features.map((r) => r.getGeometry().getCoordinates())
+            //       );
+            //       map.getView().fit(extent, {duration: 1000, padding: [50, 50, 50, 50]});
+               
             }
         };
 
@@ -165,6 +204,39 @@ const view = new View({
             const coordinate = evt.coordinate;
             displayFeatureInfo(pixel, coordinate);
         });
+
+        // var OpenPopup = (evt)=> {
+        //     const feature = this.map.forEachFeatureAtPixel(evt.pixel,
+        //      (feature, layer) => {
+        //         if (feature) {
+        //             var coord = this.map.getCoordinateFromPixel(evt.pixel);
+        //             if (typeof feature.get('features') === 'undefined') {
+        //                 document.getElementById('popup-content').innerHTML = '';
+        //                 popup.setPosition(undefined);
+        //             } else {
+        //                 var cfeatures = feature.get('features');
+        //                 if (cfeatures.length > 1) {
+        //                     document.getElementById('popup-content').innerHTML = 'Anzahl Clusterelemente';
+        //                     for (var i = 0; i < cfeatures.length; i++) {
+        //                         document.getElementById('popup-content').append(cfeatures[i].values_.deliktform);
+        //                     }
+        //                 }
+        //                 if (cfeatures.length == 1) {
+        //                     document.getElementById('popup-content').innerHTML = cfeatures[i].values_.tatort;
+        //                 }
+        //             }
+        //             popup.setPosition(coord);
+        //         } else {
+        //             popup.setPosition(undefined);
+        //         }
+        //     });
+        // };
+        // this.map.on('click', OpenPopup);
+
+
+
+
+
 
          
 
