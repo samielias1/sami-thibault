@@ -219,84 +219,133 @@ const view = new View({
         })
 
         $("#bttnBezirk").on("click", () => {
-            // Nutzereingaben holen
-            var bezirk = $("input[name='txtbezirk']:checked").val();
-            console.log('bezirk :'+bezirk);
-            
-            //Serveranfragen
-            $.post("../php/pdo_geojson_bezirk.php", { //"../php/pdo_geojson_filter.php"
-            Bezirk: bezirk,
-            
-            }, (response) =>{ // x ist hier die Antwort des Servers - hier ist es html
-            //$("#divBezirk").html('baba');
-            var geojsonFilt = response;
-            vectorSource.clear();
-            var formatFilt = new GeoJSON();
-            var featuresFilt = formatFilt.readFeatures(geojsonFilt, {
-            dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:3857'
-            });
-            vectorSource.addFeatures(featuresFilt);
-            const feature = vectorSource.getFeatures()[0];
-            console.log(feature);
-            const point = feature.getGeometry();
-            console.log('point');
-            console.log(point.getCoordinates());
-            const size = this.map.getSize();
-            console.log('size');
-            console.log(size); // hier [800 800]
-            //view.centerOn(point.getCoordinates(), size, [400, 400]); // last Parameter = position = pixel on the view to center on.
-            //this.map.view.setCenter(centerNew);
-            view.setZoom(13);
-            view.setCenter(point.getCoordinates());
-            
-            });
-            })
-            $("#bttnSelect").on("click", () => {
-            // Nutzereingaben holen
-            var jahr = $("input[name='txtJahr']:checked").val();
-            
-            var uhr = $("input[name='txtUhr']:checked").val();
-            
-            
-            //Serveranfragen
-            $.post("../php/pdo_filter.php", { //"../php/pdo_geojson_filter.php"
-            Jahr: jahr,
-            Uhr: uhr
-            
-            }, (response) =>{ // x ist hier die Antwort des Servers - hier ist es html
-            //$("#divBezirk").html('baba');
-            var geojsonFilt = response;
-            vectorSource.clear();
-            var formatFilt = new GeoJSON();
-            var featuresFilt = formatFilt.readFeatures(geojsonFilt, {
-            dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:3857'
-            });
-            vectorSource.addFeatures(featuresFilt);
-            
-            });
-            })
-            $("#bttnAlle").on("click", () => {
-            //Serveranfragen
-            $.post("../php/pdo.php", {
-            // Bezirk: bezirk,
-            
-            }, (response) =>{ // x ist hier die Antwort des Servers - hier ist es html
-            var geojsonAll = response;
-            vectorSource.clear();
-            var formatAll = new GeoJSON();
-            var featuresAll = formatAll.readFeatures(geojsonAll, {
-            dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:3857'
-            });
-            vectorSource.addFeatures(featuresAll);
-            view.setZoom(11);
-            view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));
-            
-            
-            });
-            })
+      // Nutzereingaben holen
+      var bezirk = $("input[name='txtbezirk']:checked").val();
+      console.log('bezirk :' + bezirk);     
+      var geojsonBezirk = {"type":"FeatureCollection",
+                            "features" : []};       
+      for (var i = 0; i < geojson.features.length; i++) {
+          if (geojson.features[i].properties.bezirk == bezirk){
+          geojsonBezirk.features.push(geojson.features[i]);
+        }
+        
+      }
+      var formatBez = new GeoJSON();
+        var featuresBez = formatBez.readFeatures(geojsonBezirk, {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:3857'
+        });
+        vectorSource.clear();
+        vectorSource.addFeatures(featuresBez);
+        const feature = vectorSource.getFeatures()[0];
+        console.log(feature);
+        const point = feature.getGeometry();
+        console.log('point');
+        console.log(point.getCoordinates());
+        const size = this.map.getSize();
+        console.log('size');
+        console.log(size); // hier [800 800]
+        //view.centerOn(point.getCoordinates(), size, [400, 400]);  // last Parameter = position = pixel  on the view to center on.
+        //this.map.view.setCenter(centerNew);  
+        view.setZoom(13);
+        view.setCenter(point.getCoordinates());
+
+      });
+    
+    $("#bttnSelect").on("click", () => {
+      // Nutzereingaben holen
+      var jahr = $("input[name='txtJahr']:checked").val();
+      var uhr = $("input[name='txtUhr']:checked").val();
+      var delikt = $("input[name='txtDelikt']:checked").val();
+     
+      var geoJahr = 0;
+      var geoDelikt = 0;
+      var geoUhr = 0;
+      var geojsonSelect = {"type":"FeatureCollection",
+                            "features" : []};
+      console.log(geojson.features[10].properties.datum);
+      console.log(geojson.features.length); // 220 - features
+      
+      for (var i = 0; i < geojson.features.length; i++) {
+        geoJahr = geojson.features[i].properties.datum.substr(0, 4) - 2019;
+        geoDelikt = geojson.features[i].properties.deliktform;
+        if (geojson.features[i].properties.uhrzeit.substr(0, 2) <= 22 && geojson.features[i].properties.uhrzeit.substr(0, 2) >= 7) {
+            geoUhr = 1;
+          }
+          else if (geojson.features[i].properties.uhrzeit.substr(0, 2) > 22 && geojson.features[i].properties.uhrzeit.substr(0, 2) < 7) {
+            geoUhr = 2;
+          }
+          console.log('param Jahr :' + geoJahr);
+          console.log('param Uhr :'  + geoUhr);
+          console.log('param Delikt :'  + geoDelikt) ; 
+
+
+        if (jahr > 0 && uhr > 0 && delikt > 0) {
+            if (geoJahr == jahr && geoUhr == uhr && geoDelikt == delikt ){
+                console.log('alles gleich');
+                geojsonSelect.features.push(geojson.features[i]);
+            }
+        }
+        else if (jahr > 0 && uhr > 0 && delikt == 0) {
+            if (geoJahr == jahr && geoUhr== uhr ){
+                 console.log('uhr und jahr gleich');
+                geojsonSelect.features.push(geojson.features[i]);
+            }
+        }
+        else if (jahr == 0 && uhr > 0 && delikt > 0) {
+            if (geoDelikt == delikt && geoUhr == uhr ){
+            console.log('uhr und delikt gleich');
+                geojsonSelect.features.push(geojson.features[i]);
+            }
+        }
+        else if (jahr > 0 && uhr == 0 && delikt > 0) {
+            if (geoDelikt == delikt && geoJahr== jahr ){
+            console.log('Jahr und delikt gleich');
+                geojsonSelect.features.push(geojson.features[i]);
+            }
+        }
+        else if (jahr > 0 && uhr == 0 && delikt == 0) {
+            if ( geoJahr == jahr ){
+            console.log('Jahr gleich');
+                geojsonSelect.features.push(geojson.features[i]);
+            }
+        }
+        else if (jahr == 0 && uhr > 0 && delikt == 0) {
+            if ( geoUhr == uhr ){
+            console.log('Uhr gleich');
+                geojsonSelect.features.push(geojson.features[i]);
+            }
+        }
+        else if (jahr == 0 && uhr == 0 && delikt > 0) {
+            if ( geoDelikt == delikt ){
+            console.log('Delikt gleich');
+                geojsonSelect.features.push(geojson.features[i]);
+            }
+        }
+       
+      }
+     
+      console.log(geojsonSelect.features.length);
+      vectorSource.clear();
+      var formatSelect = new GeoJSON();
+      var featuresSelect = formatSelect.readFeatures(geojsonSelect, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+      });
+      vectorSource.addFeatures(featuresSelect);
+    })
+   
+    $("#bttnAlle").on("click", () => {      
+      vectorSource.clear();
+      var formatAll = new GeoJSON();
+        var featuresAll = formatAll.readFeatures(geojson, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+         });
+        vectorSource.addFeatures(featuresAll);
+        view.setZoom(11);
+        view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));     
+      }); 
 
 
     }
