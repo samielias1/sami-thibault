@@ -3,18 +3,19 @@
   height: 500px;
   position: absolute;
   top: 100px;
-  left: 200px;
+  left: 100px;
 }
 
-#menue {
-  width: 400px;
-  height: 450px;
-  position: absolute;
-  right: 100px;
-  top: 100px;
-  background-color: rgb(196, 159, 233);
-  padding: 14px 16px;
-}
+// #menu {
+//   width: 400px;
+//   height: 850px;
+//   position: absolute;
+//   right: 100px;
+//   top: 100px;
+//   background-color: rgb(196, 159, 233);
+//   padding: 14px 16px;
+// }
+
 .topnav {
   background-color: #333;
   overflow: hidden;
@@ -90,4 +91,66 @@
   content: "✖";
 }
 
-.ui-menu { width: 150px; }
+// .ui-menu { width: 150px; }
+
+#divBezirk {
+  width: 250px;
+  height: 150px;
+  // background-color: rgb(252, 213, 237);
+  position: absolute;
+  left: 1080px;
+  top: 80px;
+  // overflow-y:scroll;
+  font-family: 'Montserrat';
+  font-size: 13px;
+  
+  }
+  
+  #divFilter{
+  width:150px;
+  height: 600px;
+  position: absolute;
+  left: 920px;
+  top: 80px;
+  font-family: 'Montserrat';
+  font-size: 13px;
+  }
+  #divUhrzeit{
+  width:150px;
+  height: 150px;
+  overflow:auto;
+  font-size: 13px;
+  font-family: 'Montserrat';
+  
+  }
+  #divJahr{
+  width:150px;
+  height: 150px;
+  overflow:auto;
+  font-size: 13px;
+  font-family: 'Montserrat';
+  
+  }
+  #divDelikt{
+  width:150px;
+  height: 150px;
+  overflow:auto;
+  font-size: 13px;
+  font-family: 'Montserrat';
+  }
+
+  #bttnBezirk{
+    position: absolute;
+    left: 1080px;
+    top: 400px;
+    font-family: 'Montserrat';
+    font-size: 13px;
+  }
+
+  #bttnAlle{
+    position: absolute;
+    left: 1080px;
+    top: 500px;
+    font-family: 'Montserrat';
+    font-size: 13px;
+  }

@@ -21,7 +21,7 @@ export const arrUhr = [
 ];
 
 //Liste fuer die Bezirke
-export const arrDeliktform = [
+export const arrDelikt = [
     "Anfragen wegen Polizeimaßnahmen",
     "Bedrohung durch Familie/ Gefahr von Zwangsverpartnerung",
     "Beleidigung (auch Volksverhetzung)",

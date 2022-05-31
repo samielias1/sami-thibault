@@ -11,11 +11,11 @@ import Select from 'ol/interaction/Select';
 import { Fill, Circle, Stroke, Style } from 'ol/style';
 import {Cluster} from 'ol/source';
 import {deliktform, selbstbezeichnung, tatort} from './list_filters';
-import {boundingExtent} from 'ol/extent';
 
 
 
 
+// Wir definieren einen Default Styles
 
 const defaultStyle = new Style({
     image: new Circle({
@@ -30,6 +30,7 @@ const defaultStyle = new Style({
     })
 });
 
+// Wir definieren einen Style für selektierte Features
 const selectStyle = new Style({
     image: new Circle({
         fill: new Fill({
@@ -43,8 +44,8 @@ const selectStyle = new Style({
     })
 });
 
+
 const vectorSource = new VectorSource({
-        // url: '../data/wochenmaerkte.geojson',        // wir bauen einen leeren Vektorlayer, der unten mit Ajax befüllt wird
         format: new GeoJSON()
     });
 
@@ -54,17 +55,19 @@ const vectorLayer = new VectorLayer({
         style: defaultStyle
     });
 
-
+// das Div "popup" wird selektiert und als overlay positioniert
 const popup = new Overlay({
-        element: document.getElementById('popup')       // das Div "popup" wird selektiert und als overlay positioniert
+        element: document.getElementById('popup')       
     });
 
+// Definition des Clusterobjekts/-layers
 const clusterSource = new Cluster({
     //    distance: parseInt(distanceInput.value, 10),
     //    minDistance: parseInt(minDistanceInput.value, 10),
        source: vectorSource,
       });
 
+// Clusterobjekt/-layers bekommt anderes Styling ab bestimmter Auflösung
 const styleCache = {};
 const clusters = new VectorLayer({
     minResolution:20,
@@ -90,33 +93,29 @@ const clusters = new VectorLayer({
   },
 });
 
+// Default view als const
 const view = new View({
     center: transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'),
     zoom: 11   
 });
 
-    export class OlMap {
-    constructor() {
-        this.map = new Map({
-            target: 'map',
-            view: view,
-            layers: [
-                new TileLayer({
-                    source: new OSM()
+let geojson = {};
+
+export class OlMap {
+   constructor() {
+       this.map = new Map({
+           target: 'map',
+           view: view,
+           layers: [
+               new TileLayer({
+                   source: new OSM()
                 }),
                 vectorLayer,
-                clusters
-            ],
+                clusters],
             overlays: [popup]
         });
-        // this.map.on('click', function() {
-
-        //         alert('Hallo');
-        //         });
-
 
         const selectSingleClick = new Select({
-            // condition: singleClick,
             layers: [vectorLayer],
             style: selectStyle
                 });
@@ -141,8 +140,6 @@ const view = new View({
                 info.push('Tatort: '+features[i].values_.tatort +'. '+ tatort[features[i].values_.tatort]);
                 info.push('Selbstbezeichnung: '+features[i].values_.selbstbezeichnung+'. '+ selbstbezeichnung[features[i].values_.selbstbezeichnung]);
                     } 
-                
-                // document.getElementById('popup-content').innerHTML = info.join('\r\n') || '(unknown)';
                 document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
                 popup.setPosition(coordinate);
             }                      
@@ -155,46 +152,11 @@ const view = new View({
             }
         };
 
-        // const displayFeatureInfo = (pixel, coordinate) => {
-        //     var features = [];
-        //     this.map.forEachFeatureAtPixel(pixel, function (feature, layer) {
-        //     features.push(feature);
-        //     });
-            
-        //     if (features.length > 0) {
-
-        //         // gefunde features in der Konsole ansehen
-        
-        //         console.log(features)
-        
-        //         var info = [];
-        //         for (var i = 0; i < features.length; i++) {
-        //           if (!features[i].values_.title) {
-        //             // Oder statt return ein alternativer Code was im array info stehen soll
-        //             return;
-        //           }
-        //             document.getElementById('popup-content').innerHTML = info.join('\r\n') || '(unknown)';
-        //                     document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
-        //                     popup.setPosition(coordinate);
-        //                 } 
-        //                 // else if (features.length > 1) {
-        //                 // hier die features vom clusters layer ansprechen?
-        //                 // }
-                        
-        //              } 
-        //             //  else {
-        //             //         document.getElementById('popup-content').innerHTML = '';
-        //             //         popup.setPosition(undefined);               
-        //             //     }
-        //             };
-
         this.map.on('singleclick', function(evt) {
             const pixel = evt.pixel;
             const coordinate = evt.coordinate;
             displayFeatureInfo(pixel, coordinate);
         });
-
-         
 
         document.getElementById('popup-closer').onclick = function() {
             popup.setPosition(undefined);
@@ -203,12 +165,13 @@ const view = new View({
             return false;
         };
 
+        // Datenbankabfrage über php und Umwandlung in geojson
         $.ajax({
             type: 'POST',
             dataType: 'json',
             url: '../php/pdo.php',
             success: (data) => {
-                var geojson = data;
+                geojson = data;
                 var format = new GeoJSON();
                 var features = format.readFeatures(geojson, {
                     dataProjection: 'EPSG:4326',
@@ -217,268 +180,121 @@ const view = new View({
                 vectorSource.addFeatures(features);
             }
         })
-
+        // Button Bezirk
         $("#bttnBezirk").on("click", () => {
-      // Nutzereingaben holen
-      var bezirk = $("input[name='txtbezirk']:checked").val();
-      console.log('bezirk :' + bezirk);     
-      var geojsonBezirk = {"type":"FeatureCollection",
+        // Nutzereingabe bzgl. Bezirk einholen
+        var bezirk = $("input[name='txtbezirk']:checked").val();  
+        // Neues GeoJSON Objekt anlegen und befüllen wo Bezirk == Bezirk
+        var geojsonBezirk = {"type":"FeatureCollection",
                             "features" : []};       
-      for (var i = 0; i < geojson.features.length; i++) {
-          if (geojson.features[i].properties.bezirk == bezirk){
-          geojsonBezirk.features.push(geojson.features[i]);
-        }
-        
+            for (var i = 0; i < geojson.features.length; i++) {
+                if (geojson.features[i].properties.bezirk == bezirk){
+                 geojsonBezirk.features.push(geojson.features[i]);
+        }  
       }
-      var formatBez = new GeoJSON();
+        // Umwandlung in Openlayers GeoJSON Objekt
+        var formatBez = new GeoJSON();
         var featuresBez = formatBez.readFeatures(geojsonBezirk, {
           dataProjection: 'EPSG:4326',
           featureProjection: 'EPSG:3857'
         });
+
+        // Punkte auf Karte löschen und neue Auswahl hinzufügen
         vectorSource.clear();
         vectorSource.addFeatures(featuresBez);
+
+        // Zentrierung und Zoom der Karte auf den ersten Punkt der GeoJSON
         const feature = vectorSource.getFeatures()[0];
-        console.log(feature);
         const point = feature.getGeometry();
-        console.log('point');
-        console.log(point.getCoordinates());
-        const size = this.map.getSize();
-        console.log('size');
-        console.log(size); // hier [800 800]
-        //view.centerOn(point.getCoordinates(), size, [400, 400]);  // last Parameter = position = pixel  on the view to center on.
-        //this.map.view.setCenter(centerNew);  
+        const size = this.map.getSize();  
         view.setZoom(13);
         view.setCenter(point.getCoordinates());
-
       });
     
-    $("#bttnSelect").on("click", () => {
-      // Nutzereingaben holen
-      var jahr = $("input[name='txtJahr']:checked").val();
-      var uhr = $("input[name='txtUhr']:checked").val();
-      var delikt = $("input[name='txtDelikt']:checked").val();
-     
-      var geoJahr = 0;
-      var geoDelikt = 0;
-      var geoUhr = 0;
-      var geojsonSelect = {"type":"FeatureCollection",
-                            "features" : []};
-      console.log(geojson.features[10].properties.datum);
-      console.log(geojson.features.length); // 220 - features
-      
-      for (var i = 0; i < geojson.features.length; i++) {
-        geoJahr = geojson.features[i].properties.datum.substr(0, 4) - 2019;
-        geoDelikt = geojson.features[i].properties.deliktform;
-        if (geojson.features[i].properties.uhrzeit.substr(0, 2) <= 22 && geojson.features[i].properties.uhrzeit.substr(0, 2) >= 7) {
-            geoUhr = 1;
-          }
-          else if (geojson.features[i].properties.uhrzeit.substr(0, 2) > 22 && geojson.features[i].properties.uhrzeit.substr(0, 2) < 7) {
-            geoUhr = 2;
-          }
-          console.log('param Jahr :' + geoJahr);
-          console.log('param Uhr :'  + geoUhr);
-          console.log('param Delikt :'  + geoDelikt) ; 
+        $("#bttnSelect").on("click", () => {
+         // Nutzereingaben holen
+        var jahr = $("input[name='txtJahr']:checked").val();
+        var uhr = $("input[name='txtUhr']:checked").val();
+        var delikt = $("input[name='txtDelikt']:checked").val();
 
+        // Neues GeoJSON Objekt anlegen und mit Nutzereingabe füllen
+        var geoJahr = 0;
+        var geoDelikt = 0;
+        var geoUhr = 0;
+        var geojsonSelect = {"type":"FeatureCollection",
+                                "features" : []};
+            for (var i = 0; i < geojson.features.length; i++) {
+                geoJahr = geojson.features[i].properties.datum.substr(0, 4) - 2019;
+                geoDelikt = geojson.features[i].properties.deliktform;
+                if (geojson.features[i].properties.uhrzeit.substr(0, 2) <= 22 && geojson.features[i].properties.uhrzeit.substr(0, 2) >= 7) {
+                    geoUhr = 1;
+                }
+                else if (geojson.features[i].properties.uhrzeit.substr(0, 2) > 22 && geojson.features[i].properties.uhrzeit.substr(0, 2) < 7) {
+                    geoUhr = 2;
+                }
 
-        if (jahr > 0 && uhr > 0 && delikt > 0) {
-            if (geoJahr == jahr && geoUhr == uhr && geoDelikt == delikt ){
-                console.log('alles gleich');
-                geojsonSelect.features.push(geojson.features[i]);
+                if (jahr > 0 && uhr > 0 && delikt > 0) {
+                    if (geoJahr == jahr && geoUhr == uhr && geoDelikt == delikt ){
+                        geojsonSelect.features.push(geojson.features[i]);
+                    }
+                }
+                else if (jahr > 0 && uhr > 0 && delikt == 0) {
+                    if (geoJahr == jahr && geoUhr== uhr ){
+                        geojsonSelect.features.push(geojson.features[i]);
+                    }
+                }
+                else if (jahr == 0 && uhr > 0 && delikt > 0) {
+                    if (geoDelikt == delikt && geoUhr == uhr ){
+                        geojsonSelect.features.push(geojson.features[i]);
+                    }
+                }
+                else if (jahr > 0 && uhr == 0 && delikt > 0) {
+                    if (geoDelikt == delikt && geoJahr== jahr ){
+                        geojsonSelect.features.push(geojson.features[i]);
+                    }
+                }
+                else if (jahr > 0 && uhr == 0 && delikt == 0) {
+                    if ( geoJahr == jahr ){
+                        geojsonSelect.features.push(geojson.features[i]);
+                    }
+                }
+                else if (jahr == 0 && uhr > 0 && delikt == 0) {
+                    if ( geoUhr == uhr ){
+                        geojsonSelect.features.push(geojson.features[i]);
+                    }
+                }
+                else if (jahr == 0 && uhr == 0 && delikt > 0) {
+                    if ( geoDelikt == delikt ){
+                        geojsonSelect.features.push(geojson.features[i]);
+                    }
+                }
             }
-        }
-        else if (jahr > 0 && uhr > 0 && delikt == 0) {
-            if (geoJahr == jahr && geoUhr== uhr ){
-                 console.log('uhr und jahr gleich');
-                geojsonSelect.features.push(geojson.features[i]);
-            }
-        }
-        else if (jahr == 0 && uhr > 0 && delikt > 0) {
-            if (geoDelikt == delikt && geoUhr == uhr ){
-            console.log('uhr und delikt gleich');
-                geojsonSelect.features.push(geojson.features[i]);
-            }
-        }
-        else if (jahr > 0 && uhr == 0 && delikt > 0) {
-            if (geoDelikt == delikt && geoJahr== jahr ){
-            console.log('Jahr und delikt gleich');
-                geojsonSelect.features.push(geojson.features[i]);
-            }
-        }
-        else if (jahr > 0 && uhr == 0 && delikt == 0) {
-            if ( geoJahr == jahr ){
-            console.log('Jahr gleich');
-                geojsonSelect.features.push(geojson.features[i]);
-            }
-        }
-        else if (jahr == 0 && uhr > 0 && delikt == 0) {
-            if ( geoUhr == uhr ){
-            console.log('Uhr gleich');
-                geojsonSelect.features.push(geojson.features[i]);
-            }
-        }
-        else if (jahr == 0 && uhr == 0 && delikt > 0) {
-            if ( geoDelikt == delikt ){
-            console.log('Delikt gleich');
-                geojsonSelect.features.push(geojson.features[i]);
-            }
-        }
-       
-      }
-     
-      console.log(geojsonSelect.features.length);
-      vectorSource.clear();
-      var formatSelect = new GeoJSON();
-      var featuresSelect = formatSelect.readFeatures(geojsonSelect, {
-        dataProjection: 'EPSG:4326',
-        featureProjection: 'EPSG:3857'
-      });
-      vectorSource.addFeatures(featuresSelect);
-    })
+
+        // Umwandlung in Openlayers GeoJSON Objekt
+        vectorSource.clear();
+        var formatSelect = new GeoJSON();
+        var featuresSelect = formatSelect.readFeatures(geojsonSelect, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        });
+        vectorSource.addFeatures(featuresSelect);
+        })
    
-    $("#bttnAlle").on("click", () => {      
-      vectorSource.clear();
-      var formatAll = new GeoJSON();
-        var featuresAll = formatAll.readFeatures(geojson, {
-        dataProjection: 'EPSG:4326',
-        featureProjection: 'EPSG:3857'
-         });
-        vectorSource.addFeatures(featuresAll);
-        view.setZoom(11);
-        view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));     
-      }); 
-
-
+        // Zurücksetzen des Filters
+        $("#bttnAlle").on("click", () => {      
+            vectorSource.clear();
+            var formatAll = new GeoJSON();
+                var featuresAll = formatAll.readFeatures(geojson, {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+                });
+                vectorSource.addFeatures(featuresAll);
+                view.setZoom(11);
+                view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));     
+            }); 
     }
 };
+
 // $( function() {
 //     $( "#menu" ).menu();
 //   } );
-
-
-
- // erste funktionierende Lösung Sami
-        // $.getJSON("../php/pdo.php",
-
-        // (data) => {
-        // vectorSource.addFeatures(new GeoJSON().readFeatures(data));
-        
-        // });
-
-        //Loesung Tibo
-        // $.getJSON('../php/pdo.php',function(data){
-        //     // console.log('before');
-        //     var geojson = data;; /*jQuery.JSONparse(data);*/
-        //     // console.log('ajax2'+geojson.type + ' typ:'+ geojson.features[1].type); //obj.employees[1].firstName
-        //     // console.log('coordinates'+ geojson.features[1].geometry.coordinates);
-        //     var format = new GeoJSON();
-        //     var features = format.readFeatures(geojson, {
-        //     dataProjection: 'EPSG:4326',
-        //     featureProjection: 'EPSG:3857'
-        //     });
-        //     vectorSource.addFeatures(features);
-        //     }
-        //     );
-
-
-// $.ajax({
-//     type: 'POST',
-//     dataType: 'json',
-//     url: '../php/pdo.php',
-//     success: function(data) {
-//         var geojson = jQuery.parseJSON(data);
-//         var format = new ol.format.GeoJSON();
-//         var features = format.readFeatures(geojson, {
-//             dataProjection: 'EPSG:4326',
-//             featureProjection: 'EPSG:3857'
-//         });
-//         vectorSource.addFeatures(features);
-//     }
-// })
-
-
-
-
-
-// import { Map, View } from 'ol';
-// import TileLayer from 'ol/layer/Tile';
-// import OSM from 'ol/source/OSM';
-// import { transform } from 'ol/proj';
-// import { Vector as VectorSource } from 'ol/source';
-// import { Vector as VectorLayer } from 'ol/layer';
-// import GeoJSON from 'ol/format/GeoJSON';
-// import Overlay from 'ol/overlay';
-// import $ from 'jquery';
-// import { Fill, Circle, Stroke, Style } from 'ol/style';
-
-// // geojson
-// const vectorSource = new VectorSource({
-//   url: './data/bezirke.geojson',
-//   format: new GeoJSON()
-// });
-
-// const myPolStyle = new Style({
-//   stroke: new Stroke({
-//     color: 'blue',
-//     lineDash: [4],
-//     width: 3,
-//   }),
-//   fill: new Fill({
-//     color: 'rgba(0, 0, 255, 0.1)',
-//   }),
-// });
-
-// const vectorLayer = new VectorLayer({
-//   source: vectorSource,
-//   style: myPolStyle
-// });
-
-// const popup = new Overlay({
-//   element: document.getElementById('popup')       // das Div "popup" wird selektiert und als overlay positioniert
-// });
-
-
-// export class OlMap {
-//   constructor() {
-//     this.map = new Map({
-//       target: 'map',
-//       view: new View({
-//         center: transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'),
-//         zoom: 11
-//       }),
-//       layers: [
-//         new TileLayer({
-//           source: new OSM()
-//         }), 
-//       vectorLayer],
-//       overlays: [popup]
-//     });
-
-//     const displayFeatureInfo = (pixel, coordinate) => {
-//       let features = [];
-//       this.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-//           features.push(feature);
-//       });
-
-//       if (features.length > 0) {
-//           var info = [];
-//           for (var i = 0; i < features.length; i++) {
-//               //info.push(features[i].properties.get('Name'));
-//               info.push((features[i].values_.Name));
-//             } 
-//           document.getElementById('popup').innerHTML = info.join(', ') || '(unknown)';
-//           popup.setPosition(coordinate);
-//       } else {
-//           document.getElementById('popup').innerHTML = '';
-//           popup.setPosition(undefined);
-//       }
-//     };
-
-//     this.map.on('singleclick', function(evt) {
-//       const pixel = evt.pixel;
-//       const coordinate = evt.coordinate;
-//       displayFeatureInfo(pixel, coordinate);
-//   });
-
-//   }  
-
-// };

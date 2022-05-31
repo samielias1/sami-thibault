@@ -28,39 +28,38 @@
 </div>
 </div>
 <div id="menu">
- <div id="divBezirk">
- <div id="contentBezirk">
-  <p>Bezirk</p>
-  <!-- wird in index.js gefüllt -->
-  </div> 
-  <input type="submit" value="Zoom Bezirke" id="bttnBezirk"> 
-  </div>
-  <div id="divFilter">
-  <div id="divUhrzeit">
-  <p>Uhrzeit</p>
-    <!-- wird in index.js gefüllt -->
-      </div> 
-
-    <div id="divJahr">
-  <p>Jahresgang</p>
-    <!-- wird in index.js gefüllt -->
-      </div> 
-
-      <div id="divDelikt">
-  <p>Deliktformen</p>
-    <!-- wird in index.js gefüllt -->
-      </div> 
-
-    <input type="submit" value="Auswählen" id="bttnSelect">
-<br>
-    <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">
- 
-    </div>
   
-
+  <!-- DIV Bezirk -->
+  <div id="divBezirk">
+    <div id="contentBezirk">
+      <p>Bezirk</p>
+      <!-- wird in index.js gefüllt -->
+    </div>
+    <br> 
+     
+  </div>
+  <input type="submit" value="Zoom Bezirke" id="bttnBezirk">
+  <!-- // DIV Filter -->
+    <div id="divFilter">
+      <div id="divUhrzeit">
+        <p>Uhrzeit</p>
+          <!-- wird in index.js gefüllt -->
+      </div> 
+      <div id="divJahr">
+        <p>Jahr</p>
+          <!-- wird in index.js gefüllt -->
+      </div> 
+      <div id="divDelikt">
+        <p>Deliktformen</p>
+          <!-- wird in index.js gefüllt -->
+      </div> 
+      <input type="submit" value="Auswählen" id="bttnSelect">
+      <br>
+    </div>
+    <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">
 </div>
 
-<ul id="menue">
+<!-- <ul id="menue">
   <li class="ui-state-disabled"><div>Toys (n/a)</div></li>
   <li><div>Books</div></li>
   <li><div>Clothing</div></li>
@@ -91,7 +90,7 @@
     </ul>
   </li>
   <li class="ui-state-disabled"><div>Specials (n/a)</div></li>
-</ul>
+</ul> -->
 
 
 
