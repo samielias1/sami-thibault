@@ -16,6 +16,7 @@ import {boundingExtent} from 'ol/extent';
 
 
 
+
 const defaultStyle = new Style({
     image: new Circle({
         fill: new Fill({
@@ -129,36 +130,63 @@ const view = new View({
                 features.push(feature);
             }); 
 
-            if (features.length == 1) {
-                
+            if (features.length > 0) {
                 var info = [];
-                // var infoTitle = ['deliktform','datum','uhrzeit','tatort','selbstbezeichnung'];
                 for (var i = 0; i < features.length; i++) {
-                    // info.push(features[i].get('deliktform','datum','uhrzeit')); //(funktioniert nicht)
-                    // info.push((features[i].values_.title));     // funktioniert, auf wochenmaerkte angewendet
-                    // infoTitle.forEach(element => {
-                    //     info.push(element + features[i].values_.element);  
-                    // });
-                    info.push('Deliktform: '+features[i].values_.deliktform+'. '+ deliktform[features[i].values_.deliktform]);
-                    info.push('Datum: '+features[i].values_.datum);
-                    info.push('Uhrzeit: '+features[i].values_.uhrzeit);
-                    info.push('Tatort: '+features[i].values_.tatort +'. '+ tatort[features[i].values_.tatort]);
-                    info.push('Selbstbezeichnung: '+features[i].values_.selbstbezeichnung+'. '+ selbstbezeichnung[features[i].values_.selbstbezeichnung]);
-                    
-                }
+                    if (!features[i].values_.deliktform) {
+                     return;}                      
+                info.push('Deliktform: '+features[i].values_.deliktform+'. '+ deliktform[features[i].values_.deliktform]);
+                info.push('Datum: '+features[i].values_.datum);
+                info.push('Uhrzeit: '+features[i].values_.uhrzeit);
+                info.push('Tatort: '+features[i].values_.tatort +'. '+ tatort[features[i].values_.tatort]);
+                info.push('Selbstbezeichnung: '+features[i].values_.selbstbezeichnung+'. '+ selbstbezeichnung[features[i].values_.selbstbezeichnung]);
+                    } 
+                
                 // document.getElementById('popup-content').innerHTML = info.join('\r\n') || '(unknown)';
                 document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
                 popup.setPosition(coordinate);
-            } 
-            // else if (features.length > 1) {
-            // hier die features vom clusters layer ansprechen?
-            // }
-            
+            }                      
+            // else if (features.length > 1) {                // funktioniert nicht - woanders einbauen
+            //     info.push('Zoom in');
+            //             }   
             else {
                 document.getElementById('popup-content').innerHTML = '';
                 popup.setPosition(undefined);               
             }
         };
+
+        // const displayFeatureInfo = (pixel, coordinate) => {
+        //     var features = [];
+        //     this.map.forEachFeatureAtPixel(pixel, function (feature, layer) {
+        //     features.push(feature);
+        //     });
+            
+        //     if (features.length > 0) {
+
+        //         // gefunde features in der Konsole ansehen
+        
+        //         console.log(features)
+        
+        //         var info = [];
+        //         for (var i = 0; i < features.length; i++) {
+        //           if (!features[i].values_.title) {
+        //             // Oder statt return ein alternativer Code was im array info stehen soll
+        //             return;
+        //           }
+        //             document.getElementById('popup-content').innerHTML = info.join('\r\n') || '(unknown)';
+        //                     document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
+        //                     popup.setPosition(coordinate);
+        //                 } 
+        //                 // else if (features.length > 1) {
+        //                 // hier die features vom clusters layer ansprechen?
+        //                 // }
+                        
+        //              } 
+        //             //  else {
+        //             //         document.getElementById('popup-content').innerHTML = '';
+        //             //         popup.setPosition(undefined);               
+        //             //     }
+        //             };
 
         this.map.on('singleclick', function(evt) {
             const pixel = evt.pixel;
@@ -273,6 +301,11 @@ const view = new View({
 
     }
 };
+// $( function() {
+//     $( "#menu" ).menu();
+//   } );
+
+
 
  // erste funktionierende Lösung Sami
         // $.getJSON("../php/pdo.php",
@@ -400,4 +433,3 @@ const view = new View({
 //   }  
 
 // };
-

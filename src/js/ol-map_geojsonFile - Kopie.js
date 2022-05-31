@@ -150,8 +150,41 @@ const view = new View({
             });
         };
         this.map.on('click', openPopup);
+//---------------------------------------------------------------------
+// ISABELLE
+const displayFeatureInfo = (pixel, coordinate) => {
+    var features = [];
+    this.map.forEachFeatureAtPixel(pixel, function (feature, layer) {
+    features.push(feature);
+    });
+    
+    if (features.length > 0) {
+    var info = [];
+    // var infoTitle = ['deliktform','datum','uhrzeit','tatort','selbstbezeichnung'];
+    for (var i = 0; i < features.length; i++) {
+    if (!features[i].values_.title) {
+    // Oder statt return ein alternativer Code was im array info stehen soll
+    return;
+    }
+    // var features = [];
+    // this.map.forEachFeatureAtPixel(pixel, function (feature, layer) {
+    // features.push(feature);
+    // });
+    
+    // if (features.length > 0) {
+    // var info = [];
+    // for (var i = 0; i < features.length; i++) {
+    // if (!features[i].values_.deliktform) {
+    
+    // return;
+    // }
+    
+    // info.push((features[i].values_.deliktform));
 
 
+
+
+//-----------------------------------------------------------------------------
         const displayFeatureInfo = (pixel, coordinate) => {
             let features = [];
             this.map.forEachFeatureAtPixel(pixel, function(feature, layer) {

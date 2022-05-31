@@ -1,5 +1,7 @@
 import 'ol/ol.css';
 import css from '../css/app.scss';
+import 'bootstrap';
+import jQuery from 'query';
 
 // import {OlMap} from './ol-map';
 import { DummyClass } from './dummy-class';
