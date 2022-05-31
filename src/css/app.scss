@@ -1,20 +1,31 @@
-#map {
-  width: 800px;
-  height: 500px;
-  position: absolute;
-  top: 100px;
-  left: 100px;
+html,
+body {
+    height: 100%;
+    padding: 0%;
+    margin: 0px;
 }
 
-// #menu {
-//   width: 400px;
-//   height: 850px;
-//   position: absolute;
-//   right: 100px;
-//   top: 100px;
-//   background-color: rgb(196, 159, 233);
-//   padding: 14px 16px;
-// }
+#map {
+  // width: max;
+  height: 100%;
+  // position: absolute;
+  // top: 100px;
+  // left: 100px;
+}
+
+#menu {
+  display: flex;
+  width: 400px;
+  height: 500px;
+  position: absolute;
+  right: 20px;
+  top: 25%;
+  background-color: rgb(244, 239, 248);
+  // background-color:transparent 50%;
+  // color:rgb(244, 239, 248);
+  padding: 14px 16px;
+  
+}
 
 .topnav {
   background-color: #333;
@@ -97,9 +108,9 @@
   width: 250px;
   height: 150px;
   // background-color: rgb(252, 213, 237);
-  position: absolute;
-  left: 1080px;
-  top: 80px;
+  // position: absolute;
+  // left: 1080px;
+  // top: 80px;
   // overflow-y:scroll;
   font-family: 'Montserrat';
   font-size: 13px;
@@ -109,9 +120,9 @@
   #divFilter{
   width:150px;
   height: 600px;
-  position: absolute;
-  left: 920px;
-  top: 80px;
+  // position: absolute;
+  // left: 920px;
+  // top: 80px;
   font-family: 'Montserrat';
   font-size: 13px;
   }
@@ -139,18 +150,18 @@
   font-family: 'Montserrat';
   }
 
-  #bttnBezirk{
-    position: absolute;
-    left: 1080px;
-    top: 400px;
-    font-family: 'Montserrat';
-    font-size: 13px;
-  }
+  // #bttnBezirk{
+  //   // position: absolute;
+  //   // left: 1080px;
+  //   // top: 400px;
+  //   font-family: 'Montserrat';
+  //   font-size: 13px;
+  // }
 
-  #bttnAlle{
-    position: absolute;
-    left: 1080px;
-    top: 500px;
-    font-family: 'Montserrat';
-    font-size: 13px;
-  }
+  // #bttnAlle{
+  //   // position: absolute;
+  //   // left: 1080px;
+  //   // top: 500px;
+  //   font-family: 'Montserrat';
+  //   font-size: 13px;
+  // }

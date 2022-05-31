@@ -11,22 +11,28 @@
     ?>
 </head>
 <body>
+
+<!-- DIV Navigation -->
 <div class="topnav">
         <a>Startseite</a>
         <a>ClickMaster</a>
         <a>GuessTheNumber</a>
         <a>MathQuiz</a>
     </div>
+
+<!-- DIV Map -->
 <div id="map">
-<div id="popup">
-  <a href="#" id="popup-closer"></a>
-  <div id="popup-content">
-    <ul>
-      <li></li>
-    </ul>  
-  </div>  
+  <div id="popup">
+    <a href="#" id="popup-closer"></a>
+      <div id="popup-content">
+        <ul>
+          <li></li>
+        </ul>  
+      </div>  
+  </div>
 </div>
-</div>
+
+<!-- DIV Menu -->
 <div id="menu">
   
   <!-- DIV Bezirk -->
@@ -36,9 +42,11 @@
       <!-- wird in index.js gefüllt -->
     </div>
     <br> 
-     
+    <input type="submit" value="Zoom Bezirke" id="bttnBezirk">
   </div>
-  <input type="submit" value="Zoom Bezirke" id="bttnBezirk">
+
+  
+
   <!-- // DIV Filter -->
     <div id="divFilter">
       <div id="divUhrzeit">
@@ -55,8 +63,9 @@
       </div> 
       <input type="submit" value="Auswählen" id="bttnSelect">
       <br>
+      <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">
     </div>
-    <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">
+    
 </div>
 
 <!-- <ul id="menue">
