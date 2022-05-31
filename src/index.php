@@ -27,12 +27,13 @@
 </div>
 </div>
 <div id="menu">
-<div id="divBezirk">
-
+ <div id="divBezirk">
+ <div id="contentBezirk">
   <p>Bezirk</p>
   <!-- wird in index.js gefüllt -->
   </div> 
   <input type="submit" value="Zoom Bezirke" id="bttnBezirk"> 
+  </div>
   <div id="divFilter">
   <div id="divUhrzeit">
   <p>Uhrzeit</p>
@@ -40,21 +41,21 @@
       </div> 
 
     <div id="divJahr">
-  <p>Jahr</p>
+  <p>Jahresgang</p>
     <!-- wird in index.js gefüllt -->
       </div> 
 
-     <div id="divDelikt">
+      <div id="divDelikt">
   <p>Deliktformen</p>
     <!-- wird in index.js gefüllt -->
       </div> 
 
-    
     <input type="submit" value="Auswählen" id="bttnSelect">
 <br>
     <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">
  
     </div>
+  
 
 </div>
 
