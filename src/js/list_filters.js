@@ -1,6 +1,5 @@
 //Liste fuer die Bezirke
 export const arrBezirke = [
-    "Berlin allg.",
     "Charlottenburg-Wilmersdorf",
     "Friedrichshain-Kreuzberg",
     "Lichtenberg",
@@ -15,7 +14,6 @@ export const arrBezirke = [
     "Treptow-Köpenick"];
 
 export const arrUhr = [
-    "alle Uhrzeiten",
     "tagsüber : 7h - 22h",
     "nachts : 22h - 7h",
 ];
@@ -42,7 +40,7 @@ export const arrDelikt = [
     "anderes",
 ];
 
-export const arrJahr = ["alle", 2020, 2021, 2022];
+export const arrJahr = [2020, 2021, 2022];
 
 export const tatort = {
     1: "öff. Straßenland",
