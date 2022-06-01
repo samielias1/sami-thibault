@@ -57,5 +57,5 @@ for (let i=0;i<arrDelikt.length;i++)  {
     };    
 $('#divDelikt').html(txtDelikt);
 
-const dummyElement = new DummyClass();
-dummyElement.changeText('Hallo wieder!')
+// const dummyElement = new DummyClass();
+// dummyElement.changeText('Hallo wieder!')

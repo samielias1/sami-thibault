@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="author" content="Sami Elias and Thibault Le Calvez">
+  <meta name="keyword" content="GIS Akademie Projekt">
+  <meta name="description" content="Queer Hate Crime Map Berlin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+  <title>Queer Hate Crime Map Berlin</title>
   <?php
       $webpack_manifest = file_get_contents("./manifest.json");
       $files = json_decode($webpack_manifest, true);
@@ -14,10 +17,10 @@
 
 <!-- DIV Navigation -->
 <div class="topnav">
-        <a>Startseite</a>
-        <a>ClickMaster</a>
+        <a>Queer Hate Crime Map Berlin</a>
+        <!-- <a>ClickMaster</a>
         <a>GuessTheNumber</a>
-        <a>MathQuiz</a>
+        <a>MathQuiz</a> -->
     </div>
 
 <!-- DIV Map -->
@@ -65,8 +68,17 @@
       <br>
       <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">
     </div>
-    
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <img src="../img/maneo.jpg" id="img">
 </div>
+
 
 <!-- <ul id="menue">
   <li class="ui-state-disabled"><div>Toys (n/a)</div></li>
