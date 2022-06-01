@@ -263,9 +263,11 @@ export class OlMap {
                     }
                 }
 
-                var abfrageJ = abfrage.join(' && ');
+                var abfrageJ = abfrage.join(' && '); // z.B. abfrageJ = 'jahr == 1 && uhr == 2 && delikt == 10'
                 console.log(abfrageJ);
-                // Neues GeoJSON Objekt anlegen und mit Nutzereingabe füllen
+
+                // Neues GeoJSON Objekt anlegen mit Variablen der Abfrage/Nutzereingabe
+
                 var geoJahr = 0;
                 var geoDelikt = 0;
                 var geoUhr = 0;
@@ -273,7 +275,9 @@ export class OlMap {
                     "type": "FeatureCollection",
                     "features": []
                 };
+                // Schleife auf jedes Feature der PHP GeoJSON (Basis aus Datenbank)
                 for (var i = 0; i < geojson.features.length; i++) {
+                    //Umwandlung der Daten aus Datenbank-GeoJSON in unsere keys
                     geoJahr = geojson.features[i].properties.datum.substr(0, 4) - 2019;
                     geoDelikt = geojson.features[i].properties.deliktform;
                     var uhrSubst = parseInt(geojson.features[i].properties.uhrzeit.substr(0, 2));
@@ -283,9 +287,10 @@ export class OlMap {
                     else if (uhrSubst > 22 || uhrSubst < 7) {
                         geoUhr = 2;
                     }
+                    // Prüfung ob jedes Feature der Datenbank-GeoJSON der Bedingung/Abfrage des Nutzers entspricht, 
+                    // d.h. mit eval wird string abfrageJ wird als key:value Paar verstanden & abgeglichen
+                    // if true, befülle neue GeoJSON mit Daten
                     if (eval(abfrageJ)) {
-                        console.log('added');
-
                         geojsonSelect.features.push(geojson.features[i]);
                     }
                 }

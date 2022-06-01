@@ -16,8 +16,7 @@ new OlMap();
 //Radio button mit Bezirken : im Moment sind Bezirken durch random erstellt und daher falsch!
 var txtBezirk = ['<p>Bezirk</p>'];
 for (let i=0;i<arrBezirke.length;i++)  {
-    var j=i+1;
-    let txt1 = '<input type="radio" id="'+arrBezirke[i]+'" name="txtbezirk" value="'+j+'">' ; 
+    let txt1 = '<input type="radio" id="'+arrBezirke[i]+'" name="txtbezirk" value="'+i+'">' ; 
     let txt2  = '<for"'+arrBezirke[i]+'">'+arrBezirke[i]+'</label><br>' ;
     txtBezirk += txt1+txt2;
     };    
