@@ -213,7 +213,8 @@ export class OlMap {
                 "features": []
             };
             for (var i = 0; i < geojson.features.length; i++) {
-                if (geojson.features[i].properties.bezirk == bezirk) {
+                var geoBezirk = geojson.features[i].properties.bezirk - 1; // die Kodierung startet bei 0 in der DB
+                if (geoBezirk == bezirk) {
                     geojsonBezirk.features.push(geojson.features[i]);
                 }
             }
@@ -234,69 +235,62 @@ export class OlMap {
             const size = this.map.getSize();
             view.setZoom(13);
             view.setCenter(point.getCoordinates());
+
+            //wir heben die Selektierung für die Filtern auf
+            $("[name='txtUhr']").prop("checked", false);
+            $("[name='txtJahr']").prop("checked", false);
+            $("[name='txtBezirk']").prop("checked", false);
         });
 
-        $("#bttnSelect").on("click", () => {
+       $("#bttnSelect").on("click", () => {
             // Nutzereingaben holen
             var jahr = $("input[name='txtJahr']:checked").val();
             var uhr = $("input[name='txtUhr']:checked").val();
-            var delikt = $("input[name='txtDelikt']:checked").val();
+            var delikt = $("#deliktListe").val();
 
-            // Neues GeoJSON Objekt anlegen und mit Nutzereingabe füllen
-            var geoJahr = 0;
-            var geoDelikt = 0;
-            var geoUhr = 0;
-            var geojsonSelect = {
-                "type": "FeatureCollection",
-                "features": []
-            };
-            for (var i = 0; i < geojson.features.length; i++) {
-                geoJahr = geojson.features[i].properties.datum.substr(0, 4) - 2019;
-                geoDelikt = geojson.features[i].properties.deliktform;
-                if (geojson.features[i].properties.uhrzeit.substr(0, 2) <= 22 && geojson.features[i].properties.uhrzeit.substr(0, 2) >= 7) {
-                    geoUhr = 1;
-                }
-                else if (geojson.features[i].properties.uhrzeit.substr(0, 2) > 22 && geojson.features[i].properties.uhrzeit.substr(0, 2) < 7) {
-                    geoUhr = 2;
+            if (!jahr) { jahr = 0; }
+            if (!uhr) { uhr = 0; }
+
+            var queries = { geoJahr: jahr, geoDelikt: delikt, geoUhr: uhr };
+
+            var abfrage = [];
+            if (jahr + delikt + uhr > 0) {
+
+                for (const key in queries) {
+                    if (queries[key] != 0) {
+                        console.log('key ' + key + ' queries.key ' + queries[key]);
+                        abfrage.push(key + "==" + queries[key]);
+                    }
                 }
 
-                if (jahr > 0 && uhr > 0 && delikt > 0) {
-                    if (geoJahr == jahr && geoUhr == uhr && geoDelikt == delikt) {
-                        geojsonSelect.features.push(geojson.features[i]);
+                var abfrageJ = abfrage.join(' && ');
+                console.log(abfrageJ);
+                // Neues GeoJSON Objekt anlegen und mit Nutzereingabe füllen
+                var geoJahr = 0;
+                var geoDelikt = 0;
+                var geoUhr = 0;
+                var geojsonSelect = {
+                    "type": "FeatureCollection",
+                    "features": []
+                };
+                for (var i = 0; i < geojson.features.length; i++) {
+                    geoJahr = geojson.features[i].properties.datum.substr(0, 4) - 2019;
+                    geoDelikt = geojson.features[i].properties.deliktform;
+                    var uhrSubst = parseInt(geojson.features[i].properties.uhrzeit.substr(0, 2));
+                    if (uhrSubst <= 22 && uhrSubst >= 7) {
+                        geoUhr = 1;
                     }
-                }
-                else if (jahr > 0 && uhr > 0 && delikt == 0) {
-                    if (geoJahr == jahr && geoUhr == uhr) {
-                        geojsonSelect.features.push(geojson.features[i]);
+                    else if (uhrSubst > 22 || uhrSubst < 7) {
+                        geoUhr = 2;
                     }
-                }
-                else if (jahr == 0 && uhr > 0 && delikt > 0) {
-                    if (geoDelikt == delikt && geoUhr == uhr) {
-                        geojsonSelect.features.push(geojson.features[i]);
-                    }
-                }
-                else if (jahr > 0 && uhr == 0 && delikt > 0) {
-                    if (geoDelikt == delikt && geoJahr == jahr) {
-                        geojsonSelect.features.push(geojson.features[i]);
-                    }
-                }
-                else if (jahr > 0 && uhr == 0 && delikt == 0) {
-                    if (geoJahr == jahr) {
-                        geojsonSelect.features.push(geojson.features[i]);
-                    }
-                }
-                else if (jahr == 0 && uhr > 0 && delikt == 0) {
-                    if (geoUhr == uhr) {
-                        geojsonSelect.features.push(geojson.features[i]);
-                    }
-                }
-                else if (jahr == 0 && uhr == 0 && delikt > 0) {
-                    if (geoDelikt == delikt) {
-                        geojsonSelect.features.push(geojson.features[i]);
-                    }
-                }
-            }
+                    if (eval(abfrageJ)) {
+                        console.log('added');
 
+                        geojsonSelect.features.push(geojson.features[i]);
+                    }
+                }
+                console.log(queries);
+                            
             // Umwandlung in Openlayers GeoJSON Objekt
             vectorSource.clear();
             var formatSelect = new GeoJSON();
@@ -304,7 +298,18 @@ export class OlMap {
                 dataProjection: 'EPSG:4326',
                 featureProjection: 'EPSG:3857'
             });
-            vectorSource.addFeatures(featuresSelect);
+            vectorSource.addFeatures(featuresSelect);            
+        }
+
+        //wir holen den Zoom level. Wenn > 11 -> Zoom ist auf Bezirksniveau
+        if (view.getZoom() > 11) {
+            view.setZoom(11);
+            view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));
+        }
+
+            // wir heben die Selektion für die Bezirke auf
+            $("[name='txtbezirk']").prop("checked", false);
+
         })
 
         // Zurücksetzen des Filters
@@ -318,6 +323,10 @@ export class OlMap {
             vectorSource.addFeatures(featuresAll);
             view.setZoom(11);
             view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));
+            
+            //wir heben die Selektion für alle radio buttons auf
+            $("[type=radio]").prop("checked", false);
+
         });
     }
 };
