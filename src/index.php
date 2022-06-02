@@ -42,12 +42,15 @@
   <div id="divBezirk">
     <div id="contentBezirk">
       <p>Bezirk</p>
+      <br>
       <!-- wird in index.js gefüllt -->
     </div>
-    <br> 
+    <br>
+    <br>  
     <input type="submit" value="Zoom Bezirke" id="bttnBezirk">
   </div>
-
+  <br> 
+  <br> 
   
 
   <!-- // DIV Filter -->

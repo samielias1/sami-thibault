@@ -11,6 +11,7 @@ import Select from 'ol/interaction/Select';
 import { Fill, Circle, Stroke, Style, Text, Icon } from 'ol/style';
 import { Cluster } from 'ol/source';
 import { deliktform, selbstbezeichnung, tatort } from './list_filters';
+import { boundingExtent } from 'ol/extent';
 
 
 
@@ -50,8 +51,8 @@ const selectStyle = new Style({
         anchorXUnits: 'fraction',
         anchorYUnits: 'pixels',
         src: 'img/dislike2.png',
-      }),
-    });
+    }),
+});
 
 const vectorSource = new VectorSource({
     format: new GeoJSON()
@@ -70,7 +71,7 @@ const popup = new Overlay({
 
 // Definition des Clusterobjekts/-layers
 const clusterSource = new Cluster({
-       distance: 75,
+    distance: 75,
     //    minDistance: 75,
     source: vectorSource,
 });
@@ -146,45 +147,66 @@ export class OlMap {
             if (features.length > 0) {
                 var info = [];
                 for (var i = 0; i < features.length; i++) {
-                    if (!features[i].values_.deliktform) {
+                    if (!features[i].values_.deliktform) {      // hier wird popup für cluster unterbunden (return wenn keine deliktform im geojson)
+                        console.log(this.map.getView().getZoom());
+
+                            clusters.getFeatures(pixel).then((clickedFeatures) => {
+                                if (clickedFeatures.length) {
+                                    // Get clustered Coordinates
+                                    const features = clickedFeatures[0].get('features');
+                                    if (features.length > 1) {
+                                        const extent = boundingExtent(
+                                            features.map((r) => r.getGeometry().getCoordinates())
+                                        );
+                                        this.map.getView().fit(extent, { duration: 2000,padding: [50, 50, 50, 50]});
+                                    }
+                                }
+                            });
                         return;
                     }
+
                     info.push('Deliktform: ' + deliktform[features[i].values_.deliktform]);
                     info.push('Datum: ' + features[i].values_.datum);
                     info.push('Uhrzeit: ' + features[i].values_.uhrzeit);
                     info.push('Tatort: ' + tatort[features[i].values_.tatort]);
                     info.push('Selbstbezeichnung: ' + selbstbezeichnung[features[i].values_.selbstbezeichnung]);
                 }
+                // document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
                 document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
                 popup.setPosition(coordinate);
+
+                // this.map.getView().off('change:resolution');
+                this.map.getView().on('change:resolution', (event) => {
+                    // console.log(this.map.getView().getZoom());
+                    if (this.map.getView().getZoom() < 14) {
+                        popup.setPosition(undefined);
+                        selectSingleClick.getFeatures().clear();
+                    }
+                });
             }
-            // else if (features.length > 1) {                // funktioniert nicht - woanders einbauen
-            //     info.push('Zoom in');
-            //             }   
             else {
                 document.getElementById('popup-content').innerHTML = '';
-                popup.setPosition(undefined);
+                popup.setPosition(undefined); // hier wird popup bei klick auf map geschlossen
             }
         };
 
-        this.map.on('singleclick', function (evt) {
+        this.map.on('singleclick', (evt) => {
             const pixel = evt.pixel;
             const coordinate = evt.coordinate;
             displayFeatureInfo(pixel, coordinate);
         });
 
-        // // evlt. einbauen: change mouse cursor when over marker
-        // this.map.on('pointermove', (e) => {
-        //     const pixel = this.map.getEventPixel(e.originalEvent);
-        //     const hit = this.map.hasFeatureAtPixel(pixel);
-        //     this.map.getTarget().style.cursor = hit ? 'pointer' : '';
-        //   });
+        // Maus-Cursor ändert sich wenn über Feature gehovert (inkl. Clusterfeature)
+        this.map.on('pointermove', (e) => {
+            const pixel = this.map.getEventPixel(e.originalEvent);
+            const hit = this.map.hasFeatureAtPixel(pixel);
+            this.map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+        });
 
         document.getElementById('popup-closer').onclick = () => {
             popup.setPosition(undefined);
             document.getElementById('popup-closer').blur();
             selectSingleClick.getFeatures().clear();
-            // if (this.map.getView().getZoom() < 12) document.getElementById('popup-closer').blur();
             return false;
         };
 
@@ -242,7 +264,7 @@ export class OlMap {
             $("[name='txtBezirk']").prop("checked", false);
         });
 
-       $("#bttnSelect").on("click", () => {
+        $("#bttnSelect").on("click", () => {
             // Nutzereingaben holen
             var jahr = $("input[name='txtJahr']:checked").val();
             var uhr = $("input[name='txtUhr']:checked").val();
@@ -295,22 +317,22 @@ export class OlMap {
                     }
                 }
                 console.log(queries);
-                            
-            // Umwandlung in Openlayers GeoJSON Objekt
-            vectorSource.clear();
-            var formatSelect = new GeoJSON();
-            var featuresSelect = formatSelect.readFeatures(geojsonSelect, {
-                dataProjection: 'EPSG:4326',
-                featureProjection: 'EPSG:3857'
-            });
-            vectorSource.addFeatures(featuresSelect);            
-        }
 
-        //wir holen den Zoom level. Wenn > 11 -> Zoom ist auf Bezirksniveau
-        if (view.getZoom() > 11) {
-            view.setZoom(11);
-            view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));
-        }
+                // Umwandlung in Openlayers GeoJSON Objekt
+                vectorSource.clear();
+                var formatSelect = new GeoJSON();
+                var featuresSelect = formatSelect.readFeatures(geojsonSelect, {
+                    dataProjection: 'EPSG:4326',
+                    featureProjection: 'EPSG:3857'
+                });
+                vectorSource.addFeatures(featuresSelect);
+            }
+
+            //wir holen den Zoom level. Wenn > 11 -> Zoom ist auf Bezirksniveau
+            if (view.getZoom() > 11) {
+                view.setZoom(11);
+                view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));
+            }
 
             // wir heben die Selektion für die Bezirke auf
             $("[name='txtbezirk']").prop("checked", false);
@@ -328,7 +350,7 @@ export class OlMap {
             vectorSource.addFeatures(featuresAll);
             view.setZoom(11);
             view.setCenter(transform([13.3833, 52.5167], 'EPSG:4326', 'EPSG:3857'));
-            
+
             //wir heben die Selektion für alle radio buttons auf
             $("[type=radio]").prop("checked", false);
 
