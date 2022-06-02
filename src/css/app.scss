@@ -110,7 +110,6 @@ body {
   content: "✖";
 }
 
-// .ui-menu { width: 150px; }
 
 #divBezirk {
   display: flex;
@@ -185,3 +184,7 @@ body {
   //   font-family: 'Montserrat';
   //   font-size: 13px;
   // }
+
+  .layer-switcher {
+    max-width: 300px;
+  }

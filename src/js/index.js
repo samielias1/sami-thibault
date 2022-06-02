@@ -5,7 +5,7 @@ import 'bootstrap';
 
 // import {OlMap} from './ol-map';
 import { DummyClass } from './dummy-class';
-import { OlMap } from './ol-map_geojsonFile';
+import { OlMap } from './ol-map_geojsonFile_heatmap';
 import {arrBezirke, arrUhr, arrJahr, arrDelikt} from './list_filters';
 
 

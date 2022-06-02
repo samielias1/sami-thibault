@@ -12,6 +12,11 @@ import { Fill, Circle, Stroke, Style, Text, Icon } from 'ol/style';
 import { Cluster } from 'ol/source';
 import { deliktform, selbstbezeichnung, tatort, bezirkZentroide, arrBezirke } from './list_filters';
 import { boundingExtent } from 'ol/extent';
+import { Heatmap as HeatmapLayer } from 'ol/layer';
+import LayerGroup from 'ol/layer/Group';
+import LayerSwitcher from 'ol-layerswitcher';
+import 'ol-layerswitcher/dist/ol-layerswitcher.css';
+
 
 
 
@@ -63,6 +68,21 @@ const vectorLayer = new VectorLayer({
     source: vectorSource,
     style: defaultStyle
 });
+
+const osmMap = new TileLayer({
+    source: new OSM()
+});
+
+const osmMap2 = new TileLayer({
+    source: new OSM()
+});
+
+const heatmap = new HeatmapLayer({
+    source: vectorSource,
+    // blur: parseInt(blur.value, 10),
+    // radius: parseInt(radius.value, 10)
+});
+
 
 // das Div "popup" wird selektiert und als overlay positioniert
 const popup = new Overlay({
@@ -122,13 +142,36 @@ export class OlMap {
             target: 'map',
             view: view,
             layers: [
-                new TileLayer({
-                    source: new OSM()
+                // Layer Group
+                new LayerGroup({
+                    title: 'Heatmap',
+                    type: 'base',
+                    combine: true,
+                    visible: false,
+                    layers: [
+                        osmMap2,
+                        heatmap]
                 }),
-                vectorLayer,
-                clusters],
+                new LayerGroup({
+                    title: 'Default',
+                    type: 'base',
+                    combine: true,
+                    visible: true,
+                    layers: [
+                        osmMap,
+                        vectorLayer,
+                        clusters]
+                })
+            ],
             overlays: [popup]
         });
+
+        //Layerswitcher
+        const layerSwitcher = new LayerSwitcher({
+            tipLabel: 'Légende', // Optional label for button
+            groupSelectStyle: 'children' // Can be 'children' [default], 'group' or 'none'
+        });
+        this.map.addControl(layerSwitcher);
 
         const selectSingleClick = new Select({
             layers: [vectorLayer],
