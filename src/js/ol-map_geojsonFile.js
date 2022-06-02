@@ -239,8 +239,7 @@ export class OlMap {
             //wir heben die Selektierung für die Filtern auf
             $("[name='txtUhr']").prop("checked", false);
             $("[name='txtJahr']").prop("checked", false);
-            $("[name='txtBezirk']").prop("checked", false);
-        });
+            $("[name='txtBezirk']").prop("checked", false);        });
 
        $("#bttnSelect").on("click", () => {
             // Nutzereingaben holen
