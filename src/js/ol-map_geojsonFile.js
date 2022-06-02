@@ -10,7 +10,7 @@ import $ from 'jquery';
 import Select from 'ol/interaction/Select';
 import { Fill, Circle, Stroke, Style, Text, Icon } from 'ol/style';
 import { Cluster } from 'ol/source';
-import { deliktform, selbstbezeichnung, tatort } from './list_filters';
+import { arrBezirke, deliktform, selbstbezeichnung, tatort,bezirkZentroide } from './list_filters';
 
 
 
@@ -229,12 +229,10 @@ export class OlMap {
             vectorSource.clear();
             vectorSource.addFeatures(featuresBez);
 
-            // Zentrierung und Zoom der Karte auf den ersten Punkt der GeoJSON
-            const feature = vectorSource.getFeatures()[0];
-            const point = feature.getGeometry();
-            const size = this.map.getSize();
+           // Zentrierung und Zoom der Karte auf das Zentrum des Bezrikes
             view.setZoom(13);
-            view.setCenter(point.getCoordinates());
+            var bezirkLang= arrBezirke[bezirk];
+            view.setCenter(transform([bezirkZentroide[bezirkLang][0],bezirkZentroide[bezirkLang][1]], 'EPSG:4326', 'EPSG:3857'));
 
             //wir heben die Selektierung für die Filtern auf
             $("[name='txtUhr']").prop("checked", false);
