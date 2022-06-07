@@ -38,22 +38,7 @@
 <!-- DIV Menu -->
 <div id="menu">
   
-  <!-- DIV Bezirk -->
-  <div id="divBezirk">
-    <div id="contentBezirk">
-      <p>Bezirk</p>
-      <br>
-      <!-- wird in index.js gefüllt -->
-    </div>
-    <br>
-    <br>  
-    <input type="submit" value="Zoom Bezirke" id="bttnBezirk">
-  </div>
-  <br> 
-  <br> 
-  
-
-  <!-- // DIV Filter -->
+   <!-- // DIV Filter -->
     <div id="divFilter">
       <div id="divUhrzeit">
         <p>Uhrzeit</p>
@@ -69,8 +54,22 @@
       </div> 
       <input type="submit" value="Auswählen" id="bttnSelect">
       <br>
+      <br>
       <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">
     </div>
+     <!-- DIV Bezirk -->
+ <div id="divBezirk">
+    <div id="contentBezirk">
+      <p>Bezirk</p>
+      <br>
+      <!-- wird in index.js gefüllt -->
+    </div>
+    <br>
+    <br>  
+    <input type="submit" value="Zoom Bezirke" id="bttnBezirk">
+  </div>
+  <br> 
+  <br>
     <br>
     <br>
     <br>
@@ -81,6 +80,7 @@
     <br>
     <img src="../img/maneo.jpg" id="img">
 </div>
+
 
 
 <!-- <ul id="menue">
