@@ -18,10 +18,6 @@ import LayerSwitcher from 'ol-layerswitcher';
 import 'ol-layerswitcher/dist/ol-layerswitcher.css';
 
 
-
-
-
-
 // Wir definieren einen Default Styles
 
 const defaultStyle = new Style({
@@ -134,7 +130,7 @@ const view = new View({
     zoom: 11
 });
 
-let geojson = {};
+let geojsonAllFeatures = {};
 
 export class OlMap {
     constructor() {
@@ -190,7 +186,7 @@ export class OlMap {
             if (features.length > 0) {
                 var info = [];
                 for (var i = 0; i < features.length; i++) {
-                    if (!features[i].values_.deliktform) {      // hier wird popup für cluster unterbunden (return wenn keine deliktform im geojson)
+                    if (!features[i].values_.deliktform) {      // hier wird popup für cluster unterbunden (return wenn keine deliktform im allFeaturesjson)
                         console.log(this.map.getView().getZoom());
 
                         clusters.getFeatures(pixel).then((clickedFeatures) => {
@@ -203,6 +199,7 @@ export class OlMap {
                                     );
                                     this.map.getView().fit(extent, { duration: 2000, padding: [50, 50, 50, 50] });
                                 }
+                                else {view.setZoom(14);}
                             }
                         });
                         return;
@@ -215,7 +212,8 @@ export class OlMap {
                     info.push('Selbstbezeichnung: ' + selbstbezeichnung[features[i].values_.selbstbezeichnung]);
                 }
                 // document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
-                document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
+                //document.getElementById('popup-content').innerHTML = '<ul><li>' + info.join("</li><li>") + '</li></ul>';
+                $('#popup-content').html('<ul><li>' + info.join("</li><li>") + '</li></ul>');
                 popup.setPosition(coordinate);
 
                 // this.map.getView().off('change:resolution');
@@ -228,7 +226,8 @@ export class OlMap {
                 });
             }
             else {
-                document.getElementById('popup-content').innerHTML = '';
+                //document.getElementById('popup-content').innerHTML = '';
+                $('#popup-content').html('');
                 popup.setPosition(undefined); // hier wird popup bei klick auf map geschlossen
             }
         };
@@ -243,15 +242,17 @@ export class OlMap {
         this.map.on('pointermove', (e) => {
             const pixel = this.map.getEventPixel(e.originalEvent);
             const hit = this.map.hasFeatureAtPixel(pixel);
-            this.map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+            this.map.getTargetElement().style.cursor = hit ? 'pointer' : ''; // kurze IF Bedingung : ternärer Operator
+                                                                        7// if xxx.cursor = hit then 'pointer'; else ''
         });
 
-        document.getElementById('popup-closer').onclick = () => {
+       // document.getElementById('popup-closer').onclick
+       $('#popup-closer').on("click" , () => {
             popup.setPosition(undefined);
-            document.getElementById('popup-closer').blur();
+            document.getElementById('popup-closer').blur();            
             selectSingleClick.getFeatures().clear();
             return false;
-        };
+        });
 
         // Datenbankabfrage über php und Umwandlung in geojson
         $.ajax({
@@ -259,9 +260,9 @@ export class OlMap {
             dataType: 'json',
             url: '../php/pdo.php',
             success: (data) => {
-                geojson = data;
+                geojsonAllFeatures = data;
                 var format = new GeoJSON();
-                var features = format.readFeatures(geojson, {
+                var features = format.readFeatures(geojsonAllFeatures, {
                     dataProjection: 'EPSG:4326',
                     featureProjection: 'EPSG:3857'
                 });
@@ -277,10 +278,10 @@ export class OlMap {
                 "type": "FeatureCollection",
                 "features": []
             };
-            for (var i = 0; i < geojson.features.length; i++) {
-                var geoBezirk = geojson.features[i].properties.bezirk - 1; // die Kodierung startet bei 0 in der DB
+            for (var i = 0; i < geojsonAllFeatures.features.length; i++) {
+                var geoBezirk = geojsonAllFeatures.features[i].properties.bezirk - 1; // die Kodierung startet bei 0 in der DB
                 if (geoBezirk == bezirk) {
-                    geojsonBezirk.features.push(geojson.features[i]);
+                    geojsonBezirk.features.push(geojsonAllFeatures.features[i]);
                 }
             }
             // Umwandlung in Openlayers GeoJSON Objekt
@@ -331,33 +332,32 @@ export class OlMap {
 
                 // Neues GeoJSON Objekt anlegen mit Variablen der Abfrage/Nutzereingabe
 
-                var geoJahr = 0;
-                var geoDelikt = 0;
-                var geoUhr = 0;
+                let geoJahr = 0;
+                let geoDelikt = 0;
+                let geoUhr = 0;
                 var geojsonSelect = {
                     "type": "FeatureCollection",
                     "features": []
                 };
                 // Schleife auf jedes Feature der PHP GeoJSON (Basis aus Datenbank)
-                for (var i = 0; i < geojson.features.length; i++) {
+                for (let i = 0; i < geojsonAllFeatures.features.length; i++) {
                     //Umwandlung der Daten aus Datenbank-GeoJSON in unsere keys
-                    geoJahr = geojson.features[i].properties.datum.substr(0, 4) - 2019;
-                    geoDelikt = geojson.features[i].properties.deliktform;
-                    var uhrSubst = parseInt(geojson.features[i].properties.uhrzeit.substr(0, 2));
+                    geoJahr = geojsonAllFeatures.features[i].properties.datum.substr(0, 4) - 2019;
+                    geoDelikt = geojsonAllFeatures.features[i].properties.deliktform;
+                    let uhrSubst = parseInt(geojsonAllFeatures.features[i].properties.uhrzeit.substr(0, 2));
                     if (uhrSubst <= 22 && uhrSubst >= 7) {
                         geoUhr = 1;
                     }
                     else if (uhrSubst > 22 || uhrSubst < 7) {
                         geoUhr = 2;
                     }
-                    // Prüfung ob jedes Feature der Datenbank-GeoJSON der Bedingung/Abfrage des Nutzers entspricht, 
+                    // Prüfung ob jedes Feature der Datenbank-geojsonAllFeatures der Bedingung/Abfrage des Nutzers entspricht, 
                     // d.h. mit eval wird string abfrageJ wird als key:value Paar verstanden & abgeglichen
                     // if true, befülle neue GeoJSON mit Daten
                     if (eval(abfrageJ)) {
-                        geojsonSelect.features.push(geojson.features[i]);
+                        geojsonSelect.features.push(geojsonAllFeatures.features[i]);
                     }
                 }
-                console.log(queries);
 
                 // Umwandlung in Openlayers GeoJSON Objekt
                 vectorSource.clear();
@@ -384,7 +384,7 @@ export class OlMap {
         $("#bttnAlle").on("click", () => {
             vectorSource.clear();
             var formatAll = new GeoJSON();
-            var featuresAll = formatAll.readFeatures(geojson, {
+            var featuresAll = formatAll.readFeatures(geojsonAllFeatures, {
                 dataProjection: 'EPSG:4326',
                 featureProjection: 'EPSG:3857'
             });
