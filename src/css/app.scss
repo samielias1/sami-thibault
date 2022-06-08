@@ -127,7 +127,7 @@ body {
   right: 8px;
 }
 #popup-closer:after {
-  content: "✖";
+  content: "?";
 }
 
 // .ui-menu { width: 150px; }
@@ -135,7 +135,9 @@ body {
 #divBezirk {
   display: flex;
   flex-direction:column;
-  margin: 10px;
+  margin: 15px;
+  width: 42%;
+  height:70%;
   // flex-wrap: wrap;
   // width: 250px;
   // height: 150px;
@@ -156,8 +158,9 @@ body {
   display: flex;
   flex-direction:column;
   flex-wrap: wrap;
-  width:150px;
-  height: 600px;
+  //width:150px;
+  width: 42%;
+  height: 70%;
   margin: 10px;
   // position: absolute;
   // left: 920px;
@@ -165,19 +168,19 @@ body {
   font-size: 12px;
   }
   #divUhrzeit{
-  width:150px;
+    width:95%;
   height: 100px;
   overflow:auto;
   }
   #divJahr{
-  width:150px;
-  height: 130px;
+    width:95%;
+    height: 130px;
   overflow:auto;
   
   }
   #divDelikt{
-  width:145px;
-  height: 60px;
+    width:95%;
+    height: 60px;
   overflow:auto;
   word-break: break-word;
   display: block !important;
@@ -186,7 +189,7 @@ body {
   }
 
   #deliktListe{
-    width:145px;   
+    width:95%;  
     overflow:auto;
     word-break: break-word;
     display: block !important;
@@ -196,16 +199,26 @@ body {
 
   #bttnBezirk{
     margin-top: 5px;
+    font-family: "Helvetica", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+
   }
 
   #bttnSelect{
     margin-top: 5px;
+    font-family: "Helvetica", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+
   }
 
-  // #bttnAlle{
-  //   // position: absolute;
+  #bttnAlle{
+    margin-top: 5px;
   //   // left: 1080px;
   //   // top: 500px;
-  //   font-family: 'Montserrat';
-  //   font-size: 13px;
-  // }
+  font-family: "Helvetica", sans-serif;
+  font-size: 12px;
+  height: 20px;
+  font-weight: 600;
+   }
