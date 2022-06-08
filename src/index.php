@@ -53,9 +53,9 @@
           <!-- wird in index.js gefüllt -->
       </div> 
       <input type="submit" value="Auswählen" id="bttnSelect">
-      <br>
-      <br>
-      <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">
+      <br>    
+    <input type="submit" value="Auswahl zurücksetzen" id="bttnAlle">   
+      
     </div>
      <!-- DIV Bezirk -->
  <div id="divBezirk">
@@ -67,17 +67,13 @@
     <br>
     <br>  
     <input type="submit" value="Zoom Bezirke" id="bttnBezirk">
+   
   </div>
-  <br> 
-  <br>
+  <br>  
     <br>
     <br>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+ 
     <img src="../img/maneo.jpg" id="img">
 </div>
 
