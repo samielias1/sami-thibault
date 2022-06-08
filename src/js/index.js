@@ -14,7 +14,7 @@ import {arrBezirke, arrUhr, arrJahr, arrDelikt} from './list_filters';
 new OlMap();
 
 //Radio button mit Bezirken : im Moment sind Bezirken durch random erstellt und daher falsch!
-var txtBezirk = ['<p>Bezirk</p>'];
+var txtBezirk = ['<p><b>Bezirk</b></p>'];
 for (let i=0;i<arrBezirke.length;i++)  {
     let txt1 = '<input type="radio" id="'+arrBezirke[i]+'" name="txtbezirk" value="'+i+'">' ; 
     let txt2  = '<for"'+arrBezirke[i]+'">'+arrBezirke[i]+'</label><br>' ;
@@ -23,7 +23,7 @@ for (let i=0;i<arrBezirke.length;i++)  {
 $('#contentBezirk').html(txtBezirk);
 
 //Radio button mit Uhrzeiten
-var txtUhr = ['<p>Uhrzeiten</p>'];
+var txtUhr = ['<p><b>Uhrzeiten</b></p>'];
 for (let i=0;i<arrUhr.length;i++)  {
     var j=i+1;
     let txt3 = '<input type="radio" id="'+arrUhr[i]+'" name="txtUhr" value="'+j+'">' ;
@@ -33,7 +33,7 @@ for (let i=0;i<arrUhr.length;i++)  {
 $('#divUhrzeit').html(txtUhr);
 
 //Radio button mit Jahren
-var txtJahr = ['<p>Jahr</p>'];
+var txtJahr = ['<p><b>Jahr</b></p>'];
 for (let i=0;i<arrJahr.length;i++)  {
     var j=i+1;
     let txt5 = '<input type="radio" id="'+arrJahr[i]+'" name="txtJahr" value="'+j+'">' ;
@@ -42,8 +42,8 @@ for (let i=0;i<arrJahr.length;i++)  {
     };    
 $('#divJahr').html(txtJahr);
 
-//Drop down menu für Deliktformen
-var txtDelikt = ['<label for="deliktListe">Deliktformen: </label><select id="deliktListe" name="deliktListe">'];
+//Drop down menu für Deliktformen 
+var txtDelikt = ['<label for="deliktListe"><b>Deliktformen:</b></label><select id="deliktListe" name="deliktListe">'];
 for (let i=0;i<arrDelikt.length;i++)  {
     let txt7 = '<option value="'+i+'">'+arrDelikt[i]+'</option>' ; 
     txtDelikt += txt7;
