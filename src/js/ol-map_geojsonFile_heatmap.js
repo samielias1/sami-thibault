@@ -199,7 +199,8 @@ export class OlMap {
                                     );
                                     this.map.getView().fit(extent, { duration: 2000, padding: [50, 50, 50, 50] });
                                 }
-                                else {view.setZoom(14);}
+                                else {view.setZoom(14);
+                                     view.setCenter(coordinate);}
                             }
                         });
                         return;
