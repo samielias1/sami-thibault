@@ -1,8 +1,5 @@
 <?php
 
-// include_once(YOUR_PHPMYADMIN_CONFIG);
-
-
 $dsn = 'mysql:host=mysql-localhost;dbname=testdb';
 $username = "root";
 $password = "root";
@@ -35,10 +32,8 @@ while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		'geometry' => array(
 			'type' => 'Point',
 			'coordinates' => array(
-					$row['lon'],            // hier auf Reihenfolge lon/lat achten - https://geojsonlint.com/ zum testen der erzeugten Geojson
-					$row['lat']
-                    // floatval($row['lon']), // wir wollen die Koordinaten als float ohne ""
-					// floatval($row['lat']) // erstmal lon, dann lat
+                    floatval($row['lon']), // wir wollen die Koordinaten als float ohne ""
+					floatval($row['lat']) // erstmal lon, dann lat
 					)
 			),
 		'properties' => $properties
@@ -48,12 +43,6 @@ while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 
 header('Content-type: application/json');
 echo json_encode($geojson, JSON_PRETTY_PRINT);
-
-//for local json files use code below
-
-/*$fp = fopen('data.json', 'w');
-fwrite($fp, geoJson($json));
-fclose($fp);*/
 
 $conn = NULL;
 

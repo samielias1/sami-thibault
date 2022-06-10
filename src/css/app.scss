@@ -1,9 +1,9 @@
 html,
 body {
-    height: 100%;
-    padding: 0%;
-    margin: 0px;
-    font-family: "Helvetica", sans-serif;
+  height: 100%;
+  padding: 0%;
+  margin: 0px;
+  font-family: "Helvetica", sans-serif;
 }
 
 #map {
@@ -13,14 +13,6 @@ body {
   margin: 0px;
   top:20px;
 }
-
-#usualmap {
-  width: 100%;
-  height: 100%;
-  padding: 0%;
-  margin: 0px;
-
- }
 
 #heatmap {
   width: 10%;
@@ -42,14 +34,12 @@ body {
   position: absolute;
   right: 0px;
   top: 6%;
-  // background-color: rgb(187, 177, 177);
   padding: 14px 16px;
-  // opacity: 80%;
   }
 
 #img{
-  width: 100%;
-  height: 12%;
+  width: 48%;
+  height: 25%;
 }
 
 .topnav {
@@ -83,18 +73,6 @@ body {
   font-size: 12px;
 }
 
-// #popup {
-//   // position: absolute;
-//   background-color: white;
-//   -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
-//   filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
-//   padding: 15px;
-//   border-radius: 10px;
-//   border: 1px solid #cccccc;
-//   bottom: 12px;
-//   left: -50px;
-// //   width: auto
-// }
 #popup-content {
   margin-right: 10px;
  
@@ -127,10 +105,8 @@ body {
   right: 8px;
 }
 #popup-closer:after {
-  content: "?";
+  content: "X";
 }
-
-// .ui-menu { width: 150px; }
 
 #divBezirk {
   display: flex;
@@ -138,85 +114,68 @@ body {
   margin: 15px;
   width: 42%;
   height:70%;
-  // flex-wrap: wrap;
-  // width: 250px;
-  // height: 150px;
-  // background-color: rgb(252, 213, 237);
-  // position: absolute;
-  // left: 1080px;
-  // top: 80px;
-  // overflow-y:scroll;
   font-size: 12px;
   }
 
   #contentBezirk {
-    flex-direction:row;
-    
+  flex-direction:row;  
     }
   
   #divFilter{
   display: flex;
   flex-direction:column;
   flex-wrap: wrap;
-  //width:150px;
   width: 42%;
   height: 70%;
   margin: 10px;
-  // position: absolute;
-  // left: 920px;
-  // top: 80px;
   font-size: 12px;
   }
   #divUhrzeit{
-    width:95%;
+  width:95%;
   height: 100px;
   overflow:auto;
   }
   #divJahr{
-    width:95%;
-    height: 130px;
+  width:95%;
+  height: 130px;
   overflow:auto;
   
   }
   #divDelikt{
-    width:95%;
-    height: 60px;
+  width:95%;
+  height: 60px;
   overflow:auto;
-  word-break: break-word;
-  display: block !important;
   font-family: "Helvetica", sans-serif;
   font-size: 12px;
   }
 
   #deliktListe{
-    width:95%;  
-    overflow:auto;
-    word-break: break-word;
-    display: block !important;
-    font-family: "Helvetica", sans-serif;
-    font-size: 12px;
+  width:95%;  
+  overflow:auto;
+  word-break: break-word;
+  display: block !important;
+  font-family: "Helvetica", sans-serif;
+  font-size: 12px;
     }
 
   #bttnBezirk{
-    margin-top: 5px;
-    font-family: "Helvetica", sans-serif;
+  margin-top: 5px;
+  font-family: "Helvetica", sans-serif;
   font-size: 12px;
   font-weight: 600;
 
   }
 
   #bttnSelect{
-    margin-top: 5px;
-    font-family: "Helvetica", sans-serif;
+  margin-top: 5px;
+  font-family: "Helvetica", sans-serif;
   font-size: 12px;
   font-weight: 600;
 
   }
 
   #bttnAlle{
-    margin-top: 5px;
-  //   // left: 1080px;
-  //   // top: 500px;
+  margin-top: 5px;
   font-family: "Helvetica", sans-serif;
   font-size: 12px;
   height: 20px;

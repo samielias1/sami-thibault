@@ -2,14 +2,9 @@ import 'ol/ol.css';
 import css from '../css/app.scss';
 import 'bootstrap';
 
-
-// import {OlMap} from './ol-map';
-import { DummyClass } from './dummy-class';
-import { OlMap } from './ol-map_geojsonFile_heatmap';
+import { OlMap } from './ol-map';
 import {arrBezirke, arrUhr, arrJahr, arrDelikt} from './list_filters';
 
-
-// alert();
 
 new OlMap();
 
@@ -43,12 +38,11 @@ for (let i=0;i<arrJahr.length;i++)  {
 $('#divJahr').html(txtJahr);
 
 //Drop down menu für Deliktformen 
-var txtDelikt = ['<label for="deliktListe"><b>Deliktformen:</b></label><select id="deliktListe" name="deliktListe">'];
+var txtDelikt = ['<label for="deliktListe"><b>Deliktformen<br><br></b></label><select id="deliktListe" name="deliktListe">'];
 for (let i=0;i<arrDelikt.length;i++)  {
     let txt7 = '<option value="'+i+'">'+arrDelikt[i]+'</option>' ; 
     txtDelikt += txt7;
     };    
-$('#divDelikt').html(txtDelikt);
+$('#divDelikt').html(txtDelikt+'<br>');
 
-// const dummyElement = new DummyClass();
-// dummyElement.changeText('Hallo wieder!')
+
